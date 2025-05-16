@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Services;
 
-use Shopware\Core\Framework\Log\Package;
 use Symfony\Component\Process\Exception\ProcessSignaledException;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -13,7 +13,6 @@ use Symfony\Component\Process\Process;
  *
  * @codeCoverageIgnore
  */
-#[Package('framework')]
 class PhpBinaryFinder
 {
     private const PHP_BINARY_NAMES = ['php8.3', 'php8.2', 'php8.1', 'php'];

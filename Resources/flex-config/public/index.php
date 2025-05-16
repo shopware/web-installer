@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 use Shopware\Core\Framework\Adapter\Kernel\KernelFactory;
 use Shopware\Core\Installer\InstallerKernel;

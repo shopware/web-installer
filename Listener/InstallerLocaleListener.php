@@ -1,8 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Listener;
 
-use Shopware\Core\Framework\Log\Package;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -10,7 +11,6 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 /**
  * @internal
  */
-#[Package('framework')]
 class InstallerLocaleListener
 {
     public const FALLBACK_LOCALE = 'en';
