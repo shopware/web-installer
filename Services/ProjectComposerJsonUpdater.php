@@ -1,22 +1,20 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Services;
 
 use Composer\MetadataMinifier\MetadataMinifier;
 use Composer\Semver\VersionParser;
 use Composer\Util\Platform;
-use Shopware\Core\Framework\Log\Package;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * @internal
  */
-#[Package('framework')]
 class ProjectComposerJsonUpdater
 {
-    public function __construct(private readonly HttpClientInterface $httpClient)
-    {
-    }
+    public function __construct(private readonly HttpClientInterface $httpClient) {}
 
     public function update(string $file, string $latestVersion): void
     {
@@ -106,7 +104,7 @@ class ProjectComposerJsonUpdater
     private function getConflictMinVersion(string $shopwareVersion): ?string
     {
         /**
-         * Since Shopware 6.6.10.1, we pin the conflicts version in Shopware to an excact version. 
+         * Since Shopware 6.6.10.1, we pin the conflicts version in Shopware to an excact version.
          * So this does not make sense anymore
          * @see https://github.com/shopware/conflicts/blob/main/USAGES.md
          */

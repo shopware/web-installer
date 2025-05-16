@@ -1,19 +1,17 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Services;
 
-use Shopware\Core\Framework\Log\Package;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @internal
  */
-#[Package('framework')]
 class FileBackup
 {
-    public function __construct(private readonly string $filePath, private readonly Filesystem $filesystem = new Filesystem())
-    {
-    }
+    public function __construct(private readonly string $filePath, private readonly Filesystem $filesystem = new Filesystem()) {}
 
     public function restore(): void
     {

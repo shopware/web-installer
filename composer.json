@@ -61,6 +61,15 @@
         ],
         "test": [
             "../../vendor/bin/phpunit"
+        ],
+        "cs:check": [
+            "PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --dry-run --diff"
+        ],
+        "cs:fix": [
+            "PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix"
+        ],
+        "phpstan": [
+            "vendor/bin/phpstan analyse"
         ]
     },
     "extra": {
@@ -74,6 +83,8 @@
         }
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.75",
+        "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^10.5"
     }
 }

@@ -1,8 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Services;
 
-use Shopware\Core\Framework\Log\Package;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
@@ -12,7 +13,6 @@ use Symfony\Component\Filesystem\Path;
  * This happens only with the WebInstaller as we don't use the Flex Git feature.
  * Therefore, we need to remove files that are not part of the recipe anymore.
  */
-#[Package('checkout')]
 class CleanupFiles
 {
     /**

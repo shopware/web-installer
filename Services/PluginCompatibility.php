@@ -1,9 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Services;
 
 use Composer\Semver\Semver;
-use Shopware\Core\Framework\Log\Package;
 
 /**
  * Any plugins which  execute composer commands @see \Shopware\Commercial\SwagCommercial::executeComposerCommands
@@ -15,7 +16,6 @@ use Shopware\Core\Framework\Log\Package;
  *
  * @internal
  */
-#[Package('framework')]
 class PluginCompatibility
 {
     private const SHOPWARE_PACKAGES = [
@@ -80,7 +80,7 @@ class PluginCompatibility
 
         $nonCompatible = array_filter(
             $customComposerPlugins,
-            fn ($plugin) => !$this->isPluginCompatible($plugin, $this->shopwareUpgradeVersion),
+            fn($plugin) => !$this->isPluginCompatible($plugin, $this->shopwareUpgradeVersion),
         );
 
         if (empty($nonCompatible)) {

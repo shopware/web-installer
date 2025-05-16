@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Controller;
 
-use Shopware\Core\Framework\Log\Package;
 use Shopware\WebInstaller\Services\CleanupFiles;
 use Shopware\WebInstaller\Services\FileBackup;
 use Shopware\WebInstaller\Services\FlexMigrator;
@@ -21,7 +21,6 @@ use Symfony\Component\Routing\Attribute\Route;
 /**
  * @internal
  */
-#[Package('framework')]
 class UpdateController extends AbstractController
 {
     public function __construct(
@@ -30,8 +29,7 @@ class UpdateController extends AbstractController
         private readonly FlexMigrator $flexMigrator,
         private readonly StreamedCommandResponseGenerator $streamedCommandResponseGenerator,
         private readonly ProjectComposerJsonUpdater $projectComposerJsonUpdater
-    ) {
-    }
+    ) {}
 
     #[Route('/update', name: 'update', defaults: ['step' => 2], methods: ['GET'])]
     public function index(Request $request): Response

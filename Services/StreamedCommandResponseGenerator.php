@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Services;
 
 use Composer\Util\Platform;
-use Shopware\Core\Framework\Log\Package;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
@@ -12,13 +12,12 @@ use Symfony\Component\Process\Process;
 /**
  * @internal
  */
-#[Package('framework')]
 class StreamedCommandResponseGenerator
 {
     public const DEFAULT_TIMEOUT = 900.0; // 15 minutes
 
     /**
-     * @param array<string> $params
+     * @param array<string>           $params
      * @param callable(Process): void $finish
      */
     public function run(array $params, callable $finish): StreamedResponse

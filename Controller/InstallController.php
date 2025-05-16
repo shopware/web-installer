@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Controller;
 
-use Shopware\Core\Framework\Log\Package;
 use Shopware\WebInstaller\Services\ProjectComposerJsonUpdater;
 use Shopware\WebInstaller\Services\RecoveryManager;
 use Shopware\WebInstaller\Services\ReleaseInfoProvider;
@@ -19,7 +19,6 @@ use Symfony\Component\Routing\Attribute\Route;
 /**
  * @internal
  */
-#[Package('framework')]
 class InstallController extends AbstractController
 {
     public function __construct(
@@ -27,8 +26,7 @@ class InstallController extends AbstractController
         private readonly StreamedCommandResponseGenerator $streamedCommandResponseGenerator,
         private readonly ReleaseInfoProvider $releaseInfoProvider,
         private readonly ProjectComposerJsonUpdater $projectComposerJsonUpdater
-    ) {
-    }
+    ) {}
 
     #[Route('/install', name: 'install', defaults: ['step' => 2])]
     public function index(): Response

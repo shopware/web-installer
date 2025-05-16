@@ -1,17 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Services;
 
 use Composer\Util\Platform;
-use Shopware\Core\Framework\Log\Package;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * @internal
  */
-#[Package('framework')]
 class ReleaseInfoProvider
 {
     private HttpClientInterface $client;

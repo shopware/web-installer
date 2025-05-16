@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Shopware\WebInstaller;
 
-use Shopware\Core\Framework\Log\Package;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
@@ -16,7 +16,6 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 /**
  * @internal
  */
-#[Package('framework')]
 class Kernel extends BaseKernel
 {
     use MicroKernelTrait;

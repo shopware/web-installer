@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Controller;
 
-use Shopware\Core\Framework\Log\Package;
 use Shopware\WebInstaller\Services\PhpBinaryFinder;
 use Shopware\WebInstaller\Services\RecoveryManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,14 +14,12 @@ use Symfony\Component\Routing\Attribute\Route;
 /**
  * @internal
  */
-#[Package('framework')]
 class PhpConfigController extends AbstractController
 {
     public function __construct(
         private readonly PhpBinaryFinder $binaryFinder,
         private readonly RecoveryManager $recoveryManager
-    ) {
-    }
+    ) {}
 
     #[Route('/configure', name: 'configure', defaults: ['step' => 1])]
     public function index(Request $request): Response

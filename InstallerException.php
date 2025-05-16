@@ -1,13 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\WebInstaller;
-
-use Shopware\Core\Framework\Log\Package;
 
 /**
  * @internal
  */
-#[Package('framework')]
 class InstallerException extends \RuntimeException
 {
     public static function cannotFindShopwareInstallation(): self

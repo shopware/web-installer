@@ -1,16 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Services;
 
-use Shopware\Core\Framework\Log\Package;
 use Shopware\WebInstaller\InstallerException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @internal
  */
-#[Package('framework')]
 class RecoveryManager
 {
     public function getBinary(): string

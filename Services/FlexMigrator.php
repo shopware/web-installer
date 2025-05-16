@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Services;
 
-use Shopware\Core\Framework\Log\Package;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -11,7 +11,6 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @phpstan-type ComposerRepository array{type: string, url: string, options: array{symlink: bool}}
  */
-#[Package('framework')]
 class FlexMigrator
 {
     private const REMOVE_FILES = [

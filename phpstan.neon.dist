@@ -1,0 +1,10 @@
+parameters:
+    level: 5
+    paths:
+        - .
+    excludePaths:
+        - vendor/
+        - Tests/_fixtures/
+        - Resources/flex-config/
+        - stub.php
+    treatPhpDocTypesAsCertain: false
