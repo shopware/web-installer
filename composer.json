@@ -72,5 +72,8 @@
             "bin-links": true,
             "forward-command": true
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
     }
 }
