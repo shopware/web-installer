@@ -232,6 +232,34 @@ class ProjectComposerJsonUpdaterTest extends TestCase
         );
     }
 
+    public function testUpdateConflictPackageGetsAddedMinified(): void
+    {
+        file_put_contents($this->json, json_encode([
+            'require' => [
+                'shopware/core' => '1.2.3',
+                'symfony/runtime' => '^5.0|^6.0',
+            ],
+        ], \JSON_THROW_ON_ERROR));
+
+        (new ProjectComposerJsonUpdater(new MockHttpClient([$this->getMinifiedVersionResponse()])))->update(
+            $this->json,
+            '6.2.0.0'
+        );
+
+        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+
+        static::assertSame(
+            [
+                'require' => [
+                    'shopware/core' => '6.2.0.0',
+                    'symfony/runtime' => '>=5',
+                    'shopware/conflicts' => '>=1.0.0',
+                ],
+            ],
+            $composerJson
+        );
+    }
+
     public function testUpdateConflictPackageGetsAddedUsesOlderVersionWhenConstraintDoesNotMatch(): void
     {
         file_put_contents($this->json, json_encode([
@@ -325,6 +353,36 @@ JSON;
           },
           {
             "version": "1.9.0"
+          },
+          {
+            "version": "1.0.0",
+            "require": {
+                "shopware/core": "*"
+            }
+          }
+        ]
+    }
+}
+JSON;
+
+        return new MockResponse($json);
+    }
+
+    private function getMinifiedVersionResponse(): MockResponse
+    {
+        $json = <<<JSON
+{
+    "packages": {
+        "shopware/conflicts": [
+          {
+            "version": "2.0.0",
+            "require": {
+                "shopware/core": ">=6.6.0"
+            }
+          },
+          {
+            "version": "1.9.0",
+            "require": "__unset"
           },
           {
             "version": "1.0.0",
