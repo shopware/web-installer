@@ -56,7 +56,7 @@
     },
     "scripts": {
         "build-phar": [
-            "curl -qL -o box.phar https://github.com/box-project/box/releases/download/4.2.0/box.phar",
+            "curl -qL -o box.phar https://github.com/box-project/box/releases/download/4.6.6/box.phar",
             "@php -d phar.readonly=0 box.phar compile",
             "rm box.phar"
         ],
