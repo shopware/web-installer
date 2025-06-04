@@ -122,8 +122,22 @@ class ProjectComposerJsonUpdater
         $parser = new VersionParser();
         $updateToVersion = $parser->parseConstraints($parser->normalize($shopwareVersion));
 
+        $requirePart = [];
+
         foreach ($versions as $version) {
-            $shopwareVersionConstraint = $version['require']['shopware/core'];
+            if (array_key_exists('require', $version)) {
+                if (is_array($version['require'])) {
+                    $requirePart = $version['require'];
+                } elseif ($version['require'] === '__unset') {
+                    $requirePart = [];
+                }
+            }
+
+            $shopwareVersionConstraint = $requirePart['shopware/core'] ?? null;
+
+            if ($shopwareVersionConstraint === null) {
+                continue;
+            }
 
             if ($parser->parseConstraints($shopwareVersionConstraint)->matches($updateToVersion)) {
                 return $version['version'];
