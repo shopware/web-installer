@@ -52,12 +52,12 @@
         </div>
     </div>
     <div class="footer-main">
-        <a href="?language=de" class="language-item{% if app.request.locale == "de" %} is--active{% endif %}">
-            DE
-        </a>
-        <a href="?language=en" class="language-item{% if app.request.locale == "en" %} is--active{% endif %}">
-            EN
-        </a>
+        {% for language in supportedLanguages %}
+            <a href="?language={{ language|lower }}"
+               class="language-item {% if app.request.locale == language %}is--active{% endif %}">
+                {{ language|upper }}
+            </a>
+        {% endfor %}
     </div>
     <script>
         const baseUrl = '{{ app.request.baseUrl }}';

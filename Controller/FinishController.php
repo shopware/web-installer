@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Controller;
 
+use Shopware\WebInstaller\Services\LanguageProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
@@ -16,6 +17,8 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class FinishController extends AbstractController
 {
+    public function __construct(private readonly LanguageProvider $languageProvider) {}
+
     #[Route('/finish', name: 'finish', defaults: ['step' => 3])]
     public function default(Request $request, #[Autowire('%kernel.cache_dir%')] string $cacheDir): Response
     {
@@ -43,6 +46,9 @@ class FinishController extends AbstractController
         }
         // @codeCoverageIgnoreEnd
 
-        return $this->render('finish.html.twig');
+        return $this->render(
+            'finish.html.twig', [
+                'supportedLanguages' => $this->languageProvider->getSupportedLanguages(),
+            ]);
     }
 }

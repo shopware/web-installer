@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Listener;
 
+use Shopware\WebInstaller\Services\LanguageProvider;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -13,12 +14,17 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class InstallerLocaleListener
 {
-    public const FALLBACK_LOCALE = 'en';
+    public const FALLBACK_LOCALE = 'us';
 
     /**
      * @var list<string>
      */
-    private array $installerLanguages = ['de', 'en'];
+    private array $installerLanguages;
+
+    public function __construct(LanguageProvider $languageProvider)
+    {
+        $this->installerLanguages = $languageProvider->getSupportedLanguages();
+    }
 
     #[AsEventListener(RequestEvent::class, priority: 15)]
     public function __invoke(RequestEvent $event): void

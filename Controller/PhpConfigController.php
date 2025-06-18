@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Controller;
 
+use Shopware\WebInstaller\Services\LanguageProvider;
 use Shopware\WebInstaller\Services\PhpBinaryFinder;
 use Shopware\WebInstaller\Services\RecoveryManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,7 +19,8 @@ class PhpConfigController extends AbstractController
 {
     public function __construct(
         private readonly PhpBinaryFinder $binaryFinder,
-        private readonly RecoveryManager $recoveryManager
+        private readonly RecoveryManager $recoveryManager,
+        private readonly LanguageProvider $languageProvider,
     ) {}
 
     #[Route('/configure', name: 'configure', defaults: ['step' => 1])]
@@ -42,6 +44,7 @@ class PhpConfigController extends AbstractController
         return $this->render('php_config.html.twig', [
             'phpBinary' => $request->getSession()->get('phpBinary', $this->binaryFinder->find()),
             'shopwareLocation' => $shopwareLocation,
+            'supportedLanguages' => $this->languageProvider->getSupportedLanguages(),
         ]);
     }
 }
