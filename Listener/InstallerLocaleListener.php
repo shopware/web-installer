@@ -23,7 +23,7 @@ class InstallerLocaleListener
 
     public function __construct(LanguageProvider $languageProvider)
     {
-        $this->installerLanguages = $languageProvider->getSupportedLanguages();
+        $this->installerLanguages = array_values($languageProvider->getSupportedLanguages());
     }
 
     #[AsEventListener(RequestEvent::class, priority: 15)]
