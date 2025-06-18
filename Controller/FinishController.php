@@ -47,8 +47,10 @@ class FinishController extends AbstractController
         // @codeCoverageIgnoreEnd
 
         return $this->render(
-            'finish.html.twig', [
+            'finish.html.twig',
+            [
                 'supportedLanguages' => $this->languageProvider->getSupportedLanguages(),
-            ]);
+            ]
+        );
     }
 }
