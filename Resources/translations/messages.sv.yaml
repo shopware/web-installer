@@ -1,0 +1,78 @@
+shopware.update:
+    header_title: Installation
+    back: Tillbaka
+    rc_hint: (Rekommenderas inte i produktion)
+    language:
+        de: Deutsch
+        en: English (United Kingdom)
+        us: English (United States)
+        nl: Nederlands
+        it: Italiano
+        fr: Français
+        es: Español
+        pt: Português
+        pl: Polski
+        cs: Čeština
+        sv: Svenska
+        da: Dansk
+        nb: Norsk
+    navigation:
+        start: Språk
+        configure_php: Konfiguration
+        download: Ladda ned
+        finish: Avsluta
+    steps:
+        start:
+            title: Shopware-installatör
+            welcomeTitle: Välkommen till Shopware-installatören
+            welcomeMessage: >
+                Denna process kommer att vägleda dig genom de steg som krävs
+                för att installera eller uppdatera Shopware 6.
+            languageSelection: Installatörsspråk
+            languageSelectionInfo: >
+                Språket som väljs här gäller endast för denna installatör.
+                Du kan välja ett annat språk för din butik senare.
+            submit: Fortsätt
+
+        configure_php:
+            title: Konfiguration
+            info: >
+                PHP-binär hittad.
+                Om du vill välja filen själv kan du ange den här.
+            pathInput: PHP-binär
+            submit: Spara konfiguration
+
+        update:
+            title: Uppdaterar Shopware
+            log: Logg
+            backupHint: Se till att du har skapat en säkerhetskopia innan du uppdaterar.
+            submit: Uppdatera Shopware
+            currentVersion: 'Aktuell version: %version%'
+            updateVersion: 'Uppdateringsversion:'
+            error: >
+                Uppdateringsprocessen misslyckades.
+                Du kan öppna loggfilen <a href="#" id="download-log">här</a>.
+
+        finish:
+            title: Avsluta
+            message: |
+                Installationsprocessen har slutförts framgångsrikt.
+
+                I nästa steg kommer återställningsfilerna att tas bort från servern.
+                Du kommer sedan att omdirigeras till Shopware-administrationen.
+            submit: Öppna administration
+
+        install:
+            title: Ladda ned Shopware
+            info: >
+                Välj en Shopware-version att ladda ned.
+                Programvaran kommer att laddas ned till den aktuella mappen.
+            shopwareVersion: 'Shopware-version:'
+            after_install: >
+                Efter nedladdning bör du ändra dokumentroten till den nyss skapade mappen <strong>public</strong>.
+            log: Logg
+            installation_failed: Nedladdning misslyckades
+            submit: Ladda ned
+            error: >
+                Shopware kunde inte laddas ned.
+                Du kan öppna loggfilen <a href="#" id="download-log">här</a>.

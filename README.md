@@ -25,13 +25,10 @@ Copy the created `shopware-installer.phar.php` file to the root directory of you
 
 Request that page in your browser with /shopware-installer.phar.php and the Installer will decide if you need to install or update Shopware.
 
-## Running the Web Installer in Development Mode
+## Running the Web Installer for development
 
-For development first set up a second Shop installation inside the `shop` directory, to set up this installation run `composer run e2e:web-update:prepare`.
-
-Then start a second Webserver for only this Shop with `composer run e2e:web-update:start`. 
-The Web installer will be available at http://localhost:8050/shopware-installer.phar.php. 
-It is recommended to start the watcher when you're changing the Web Installer code with `watch-updater`.
+Change the files of this repository as needed, then compile and copy afterwards:
+`composer run build-phar && cp -f shopware-installer.phar.php your/directory/`
 
 ## Running update against an unreleased Shopware version
 

@@ -7,6 +7,7 @@ namespace Shopware\WebInstaller\Controller;
 use Shopware\WebInstaller\Services\CleanupFiles;
 use Shopware\WebInstaller\Services\FileBackup;
 use Shopware\WebInstaller\Services\FlexMigrator;
+use Shopware\WebInstaller\Services\LanguageProvider;
 use Shopware\WebInstaller\Services\PluginCompatibility;
 use Shopware\WebInstaller\Services\ProjectComposerJsonUpdater;
 use Shopware\WebInstaller\Services\RecoveryManager;
@@ -28,7 +29,8 @@ class UpdateController extends AbstractController
         private readonly ReleaseInfoProvider $releaseInfoProvider,
         private readonly FlexMigrator $flexMigrator,
         private readonly StreamedCommandResponseGenerator $streamedCommandResponseGenerator,
-        private readonly ProjectComposerJsonUpdater $projectComposerJsonUpdater
+        private readonly ProjectComposerJsonUpdater $projectComposerJsonUpdater,
+        private readonly LanguageProvider $languageProvider,
     ) {}
 
     #[Route('/update', name: 'update', defaults: ['step' => 2], methods: ['GET'])]
@@ -52,6 +54,7 @@ class UpdateController extends AbstractController
             'currentShopwareVersion' => $currentShopwareVersion,
             'isFlexProject' => $this->recoveryManager->isFlexProject($shopwarePath),
             'versions' => $latestVersions,
+            'supportedLanguages' => $this->languageProvider->getSupportedLanguages(),
         ]);
     }
 

@@ -1,0 +1,79 @@
+shopware.update:
+    header_title: Installazione
+    back: Indietro
+    rc_hint: (Non consigliato in produzione)
+    language:
+        de: Deutsch
+        en: English (United Kingdom)
+        us: English (United States)
+        nl: Nederlands
+        it: Italiano
+        fr: Français
+        es: Español
+        pt: Português
+        pl: Polski
+        cs: Čeština
+        sv: Svenska
+        da: Dansk
+        nb: Norsk
+    navigation:
+        start: Lingua
+        configure_php: Configurazione
+        download: Download
+        finish: Fine
+    steps:
+        start:
+            title: Installatore di Shopware
+            welcomeTitle: Benvenuto nell’installatore di Shopware
+            welcomeMessage: >
+                Questo processo ti guiderà attraverso i passaggi necessari
+                per installare o aggiornare Shopware 6.
+            languageSelection: Lingua dell’installatore
+            languageSelectionInfo: >
+                La lingua selezionata vale solo per questo installatore.
+                Potrai scegliere un’altra lingua per il tuo shop in seguito.
+            submit: Continua
+
+        configure_php:
+            title: Configurazione
+            info: >
+                Eseguibile PHP trovato.
+                Se desideri selezionare manualmente il file, puoi specificarlo qui.
+            pathInput: Eseguibile PHP
+            submit: Salva configurazione
+
+        update:
+            title: Aggiornamento di Shopware
+            log: Registro
+            backupHint: Assicurati di aver creato un backup prima di aggiornare.
+            submit: Aggiorna Shopware
+            currentVersion: 'Versione attuale: %version%'
+            updateVersion: 'Versione di aggiornamento:'
+            error: >
+                Processo di aggiornamento non riuscito.
+                Puoi accedere al file di registro <a href="#" id="download-log">qui</a>.
+
+        finish:
+            title: Fine
+            message: |
+                Il processo di installazione è stato completato con successo.
+
+                Nel passaggio successivo i file di ripristino verranno rimossi dal server.
+                Verrai quindi reindirizzato all’amministrazione di Shopware.
+            submit: Apri l’amministrazione
+
+        install:
+            title: Download di Shopware
+            info: >
+                Scegli una versione di Shopware da scaricare.
+                Il software verrà scaricato nella directory corrente.
+            shopwareVersion: 'Versione di Shopware:'
+            after_install: >
+                Dopo il download, dovresti impostare la root del documento
+                sulla cartella appena creata <strong>public</strong>.
+            log: Registro
+            installation_failed: Download non riuscito
+            submit: Scarica
+            error: >
+                Impossibile scaricare Shopware.
+                Puoi accedere al file di registro <a href="#" id="download-log">qui</a>.
