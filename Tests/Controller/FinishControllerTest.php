@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Shopware\WebInstaller\Controller\FinishController;
+use Shopware\WebInstaller\Services\LanguageProvider;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
@@ -21,7 +22,7 @@ class FinishControllerTest extends TestCase
 {
     public function testRendersTemplate(): void
     {
-        $controller = new FinishController();
+        $controller = new FinishController($this->createMock(LanguageProvider::class), );
         $controller->setContainer($this->buildContainer());
 
         $response = $controller->default(new Request(), '');

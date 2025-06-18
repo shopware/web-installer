@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Shopware\WebInstaller\Listener\InstallerLocaleListener;
+use Shopware\WebInstaller\Services\LanguageProvider;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -24,7 +25,12 @@ class InstallerLocaleListenerTest extends TestCase
     #[DataProvider('installerLocaleProvider')]
     public function testSetInstallerLocale(Request $request, string $expectedLocale): void
     {
-        $listener = new InstallerLocaleListener();
+        $languageProvider = $this->createMock(LanguageProvider::class);
+        $languageProvider->method('getSupportedLanguages')->willReturn([
+            'de', 'en', 'us', 'cs', 'es', 'fr', 'it', 'nl', 'pl', 'pt', 'sv', 'da', 'nb',
+        ]);
+
+        $listener = new InstallerLocaleListener($languageProvider);
 
         $listener->__invoke(
             new RequestEvent(
@@ -43,18 +49,18 @@ class InstallerLocaleListenerTest extends TestCase
         $request = new Request();
         $request->setSession(new Session(new MockArraySessionStorage()));
 
-        yield 'falls back to en if no locale can be found' => [
+        yield 'falls back to us if no locale can be found' => [
             $request,
-            'en',
+            'us',
         ];
 
         $request = new Request();
         $request->setSession(new Session(new MockArraySessionStorage()));
-        $request->headers = new HeaderBag(['HTTP_ACCEPT_LANGUAGE' => 'es-ES']);
+        $request->headers = new HeaderBag(['HTTP_ACCEPT_LANGUAGE' => 'ru-RU']);
 
-        yield 'falls back to en if browser header is not supported' => [
+        yield 'falls back to us if browser header is not supported' => [
             $request,
-            'en',
+            'us',
         ];
 
         $request = new Request();
@@ -77,7 +83,7 @@ class InstallerLocaleListenerTest extends TestCase
 
         $request = new Request();
         $session = new Session(new MockArraySessionStorage());
-        $session->set('language', 'es');
+        $session->set('language', 'ru');
         $request->setSession($session);
         $request->headers = new HeaderBag(['HTTP_ACCEPT_LANGUAGE' => 'de']);
 
@@ -104,7 +110,12 @@ class InstallerLocaleListenerTest extends TestCase
         $session->set('language', 'en');
         $request->setSession($session);
 
-        $listener = new InstallerLocaleListener();
+        $languageProvider = $this->createMock(LanguageProvider::class);
+        $languageProvider->method('getSupportedLanguages')->willReturn([
+            'de', 'en', 'us', 'cs', 'es', 'fr', 'it', 'nl', 'pl', 'pt', 'sv', 'da', 'nb',
+        ]);
+
+        $listener = new InstallerLocaleListener($languageProvider);
 
         $listener->__invoke(
             new RequestEvent(
