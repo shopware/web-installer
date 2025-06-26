@@ -50,8 +50,11 @@ class InstallerLocaleListener
             return (string) $session->get('language');
         }
 
-        // get preferred language from browser header, if no match can be found, the first in the array is used(en-US)
-        $preferredLanguage = $request->getPreferredLanguage($this->installerLanguages);
+        // fallback: get preferred language from browser header, or default to first supported
+        $preferredLanguage =
+            $request->getPreferredLanguage($this->installerLanguages)
+            ?? $this->installerLanguages[0];
+
         $session->set('language', $preferredLanguage);
 
         return $preferredLanguage;
