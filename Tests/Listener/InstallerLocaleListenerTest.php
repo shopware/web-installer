@@ -27,8 +27,7 @@ class InstallerLocaleListenerTest extends TestCase
     {
         $languageProvider = $this->createMock(LanguageProvider::class);
         $languageProvider->method('getSupportedLanguages')->willReturn([
-            'de', 'en', 'us', 'cs', 'es', 'fr', 'it', 'nl', 'pl', 'pt', 'sv', 'da', 'nb',
-        ]);
+            'en-US','en-GB','de', 'cs', 'es-ES', 'fr', 'it', 'nl', 'pl', 'pt-PT', 'sv-SE', 'da', 'no',]);
 
         $listener = new InstallerLocaleListener($languageProvider);
 
@@ -51,7 +50,7 @@ class InstallerLocaleListenerTest extends TestCase
 
         yield 'falls back to us if no locale can be found' => [
             $request,
-            'us',
+            'en-US',
         ];
 
         $request = new Request();
@@ -60,12 +59,12 @@ class InstallerLocaleListenerTest extends TestCase
 
         yield 'falls back to us if browser header is not supported' => [
             $request,
-            'us',
+            'en-US',
         ];
 
         $request = new Request();
         $request->setSession(new Session(new MockArraySessionStorage()));
-        $request->headers = new HeaderBag(['HTTP_ACCEPT_LANGUAGE' => 'de-DE']);
+        $request->headers = new HeaderBag(['Accept-Language' => 'de-DE']);
 
         yield 'uses browser header if it is supported with long iso code' => [
             $request,
@@ -74,7 +73,7 @@ class InstallerLocaleListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession(new Session(new MockArraySessionStorage()));
-        $request->headers = new HeaderBag(['HTTP_ACCEPT_LANGUAGE' => 'de']);
+        $request->headers = new HeaderBag(['Accept-Language' => 'de']);
 
         yield 'uses browser header if it is supported with short iso code' => [
             $request,
@@ -85,7 +84,7 @@ class InstallerLocaleListenerTest extends TestCase
         $session = new Session(new MockArraySessionStorage());
         $session->set('language', 'ru');
         $request->setSession($session);
-        $request->headers = new HeaderBag(['HTTP_ACCEPT_LANGUAGE' => 'de']);
+        $request->headers = new HeaderBag(['Accept-Language' => 'de']);
 
         yield 'falls back to browser header if session value is not supported' => [
             $request,
@@ -112,7 +111,7 @@ class InstallerLocaleListenerTest extends TestCase
 
         $languageProvider = $this->createMock(LanguageProvider::class);
         $languageProvider->method('getSupportedLanguages')->willReturn([
-            'de', 'en', 'us', 'cs', 'es', 'fr', 'it', 'nl', 'pl', 'pt', 'sv', 'da', 'nb',
+            'en-US','en-GB','de', 'cs', 'es-ES', 'fr', 'it', 'nl', 'pl', 'pt-PT', 'sv-SE', 'da', 'no',
         ]);
 
         $listener = new InstallerLocaleListener($languageProvider);

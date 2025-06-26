@@ -22,7 +22,7 @@ class FinishControllerTest extends TestCase
 {
     public function testRendersTemplate(): void
     {
-        $controller = new FinishController($this->createMock(LanguageProvider::class), );
+        $controller = new FinishController($this->createMock(LanguageProvider::class));
         $controller->setContainer($this->buildContainer());
 
         $response = $controller->default(new Request(), '');

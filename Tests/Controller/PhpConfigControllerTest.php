@@ -27,7 +27,7 @@ class PhpConfigControllerTest extends TestCase
 {
     public function testIndex(): void
     {
-        $controller = new PhpConfigController($this->createMock(PhpBinaryFinder::class), $this->createMock(RecoveryManager::class), $this->createMock(LanguageProvider::class), );
+        $controller = new PhpConfigController($this->createMock(PhpBinaryFinder::class), $this->createMock(RecoveryManager::class), $this->createMock(LanguageProvider::class));
         $controller->setContainer($this->buildContainer());
 
         $request = new Request();
@@ -40,7 +40,7 @@ class PhpConfigControllerTest extends TestCase
 
     public function testSetConfigOnUpdate(): void
     {
-        $controller = new PhpConfigController($this->createMock(PhpBinaryFinder::class), $this->createMock(RecoveryManager::class), $this->createMock(LanguageProvider::class), );
+        $controller = new PhpConfigController($this->createMock(PhpBinaryFinder::class), $this->createMock(RecoveryManager::class), $this->createMock(LanguageProvider::class));
         $controller->setContainer($this->buildContainer());
 
         $request = new Request();
@@ -61,7 +61,7 @@ class PhpConfigControllerTest extends TestCase
         $recoveryManager = $this->createMock(RecoveryManager::class);
         $recoveryManager->method('getShopwareLocation')->willThrowException(new \RuntimeException('cannot find shopware'));
 
-        $controller = new PhpConfigController($this->createMock(PhpBinaryFinder::class), $recoveryManager, $this->createMock(LanguageProvider::class), );
+        $controller = new PhpConfigController($this->createMock(PhpBinaryFinder::class), $recoveryManager, $this->createMock(LanguageProvider::class));
         $controller->setContainer($this->buildContainer());
 
         $request = new Request();

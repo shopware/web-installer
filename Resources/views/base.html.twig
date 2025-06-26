@@ -53,7 +53,7 @@
     </div>
     <div class="footer-main">
         {% for language in supportedLanguages %}
-            <a href="?language={{ language|lower }}"
+            <a href="?language={{ language }}"
                class="language-item {% if app.request.locale == language %}is--active{% endif %}">
                 {{ language|upper }}
             </a>

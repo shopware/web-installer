@@ -14,8 +14,6 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class InstallerLocaleListener
 {
-    public const FALLBACK_LOCALE = 'us';
-
     /**
      * @var list<string>
      */
@@ -52,20 +50,10 @@ class InstallerLocaleListener
             return (string) $session->get('language');
         }
 
-        // get initial language from browser header
-        if ($request->headers->has('HTTP_ACCEPT_LANGUAGE')) {
-            $browserLanguage = explode(',', $request->headers->get('HTTP_ACCEPT_LANGUAGE', ''));
-            $browserLanguage = mb_strtolower(mb_substr($browserLanguage[0], 0, 2));
+        // get preferred language from browser header, if no match can be found, the first in the array is used(en-US)
+        $preferredLanguage = $request->getPreferredLanguage($this->installerLanguages);
+        $session->set('language', $preferredLanguage);
 
-            if (\in_array($browserLanguage, $this->installerLanguages, true)) {
-                $session->set('language', $browserLanguage);
-
-                return $browserLanguage;
-            }
-        }
-
-        $session->set('language', self::FALLBACK_LOCALE);
-
-        return self::FALLBACK_LOCALE;
+        return $preferredLanguage;
     }
 }

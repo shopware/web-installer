@@ -18,12 +18,23 @@ class LanguageProviderTest extends TestCase
         $params->method('get')
             ->with('shopware.installer.supportedLanguages')
             ->willReturn([
-                'de' => 'Deutsch',
-                'en' => 'English',
+                'de'    => 'de',
+                'en'    => 'en',
+                'en-US' => 'en-US',
+                'cs'    => 'cs',
+                'es-ES' => 'es-ES',
+                'fr'    => 'fr',
+                'it'    => 'it',
+                'nl'    => 'nl',
+                'pl'    => 'pl',
+                'pt-PT' => 'pt-PT',
+                'sv-SE' => 'sv-SE',
+                'da'    => 'da-DK',
+                'no'    => 'no',
             ]);
 
         $provider = new LanguageProvider($params);
 
-        $this->assertSame(['de', 'en'], $provider->getSupportedLanguages());
+        $this->assertSame(['de', 'en', 'en-US', 'cs', 'es-ES', 'fr', 'it', 'nl', 'pl', 'pt-PT', 'sv-SE', 'da', 'no'], $provider->getSupportedLanguages());
     }
 }

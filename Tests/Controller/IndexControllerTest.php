@@ -26,7 +26,7 @@ class IndexControllerTest extends TestCase
             ->method('generate')
             ->willReturnArgument(0);
 
-        $controller = new IndexController($this->createMock(LanguageProvider::class), );
+        $controller = new IndexController($this->createMock(LanguageProvider::class));
         $container = new Container();
         $container->set('router', $router);
 

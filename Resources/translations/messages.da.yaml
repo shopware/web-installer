@@ -4,18 +4,18 @@ shopware.update:
     rc_hint: (Ikke anbefalet til produktion)
     language:
         de: Deutsch
-        en: English (United Kingdom)
-        us: English (United States)
-        nl: Nederlands
-        it: Italiano
-        fr: Français
-        es: Español
-        pt: Português
-        pl: Polski
+        'en-GB': English (United Kingdom)
+        'en-US': English (United States)
         cs: Čeština
-        sv: Svenska
+        'es-ES': Español
+        fr: Français
+        it: Italiano
+        nl: Nederlands
+        pl: Polski
+        'pt-PT': Português
+        'sv-SE': Svenska
         da: Dansk
-        nb: Norsk
+        no: Norsk
     navigation:
         start: Sprog
         configure_php: Konfiguration
