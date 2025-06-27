@@ -27,7 +27,7 @@ class InstallerLocaleListenerTest extends TestCase
     {
         $languageProvider = $this->createMock(LanguageProvider::class);
         $languageProvider->method('getSupportedLanguages')->willReturn([
-            'en-US','en-GB','de', 'cs', 'es-ES', 'fr', 'it', 'nl', 'pl', 'pt-PT', 'sv-SE', 'da', 'no',]);
+            'en-US','en','de', 'cs', 'es-ES', 'fr', 'it', 'nl', 'pl', 'pt-PT', 'sv-SE', 'da', 'no',]);
 
         $listener = new InstallerLocaleListener($languageProvider);
 
@@ -111,7 +111,7 @@ class InstallerLocaleListenerTest extends TestCase
 
         $languageProvider = $this->createMock(LanguageProvider::class);
         $languageProvider->method('getSupportedLanguages')->willReturn([
-            'en-US','en-GB','de', 'cs', 'es-ES', 'fr', 'it', 'nl', 'pl', 'pt-PT', 'sv-SE', 'da', 'no',
+            'en-US','en','de', 'cs', 'es-ES', 'fr', 'it', 'nl', 'pl', 'pt-PT', 'sv-SE', 'da', 'no',
         ]);
 
         $listener = new InstallerLocaleListener($languageProvider);

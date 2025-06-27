@@ -15,7 +15,7 @@ services:
 parameters:
     shopware.installer.supportedLanguages:
         'en-US': 'en-US'
-        'en-GB': 'en-GB'
+        en: 'en'
         de: 'de'
         cs: 'cs'
         'es-ES': 'es-ES'

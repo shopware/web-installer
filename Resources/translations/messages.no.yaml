@@ -4,7 +4,7 @@ shopware.update:
     rc_hint: (Anbefales ikke i produksjon)
     language:
         de: Deutsch
-        'en-GB': English (United Kingdom)
+        en: English (United Kingdom)
         'en-US': English (United States)
         cs: Čeština
         'es-ES': Español
