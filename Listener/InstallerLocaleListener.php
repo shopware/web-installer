@@ -50,10 +50,16 @@ class InstallerLocaleListener
             return (string) $session->get('language');
         }
 
+        $mappedLanguages = array_map(
+            fn(string $l): string => str_replace('-', '_', $l),
+            $this->installerLanguages
+        );
+
         // fallback: get preferred language from browser header, or default to first supported
-        $preferredLanguage =
-            $request->getPreferredLanguage($this->installerLanguages)
-            ?? $this->installerLanguages[0];
+        $preferredLanguage = $request->getPreferredLanguage($mappedLanguages)
+            ?? $mappedLanguages[0];
+
+        $preferredLanguage = str_replace('_', '-', $preferredLanguage);
 
         $session->set('language', $preferredLanguage);
 
