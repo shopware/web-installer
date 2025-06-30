@@ -1,0 +1,78 @@
+shopware.update:
+    header_title: Installasjon
+    back: Tilbake
+    rc_hint: (Anbefales ikke i produksjon)
+    language:
+        de: Deutsch
+        en: English (United Kingdom)
+        'en-US': English (United States)
+        cs: Čeština
+        'es-ES': Español
+        fr: Français
+        it: Italiano
+        nl: Nederlands
+        pl: Polski
+        'pt-PT': Português
+        'sv-SE': Svenska
+        da: Dansk
+        no: Norsk
+    navigation:
+        start: Språk
+        configure_php: Konfigurasjon
+        download: Last ned
+        finish: Fullfør
+    steps:
+        start:
+            title: Shopware-installasjonsprogram
+            welcomeTitle: Velkommen til Shopware-installasjonsprogrammet
+            welcomeMessage: >
+                Denne prosessen vil veilede deg gjennom trinnene som trengs
+                for å installere eller oppdatere Shopware 6.
+            languageSelection: Installeringsspråk
+            languageSelectionInfo: >
+                Språket valgt her gjelder kun for dette installasjonsprogrammet.
+                Du kan velge et annet språk for butikken din senere.
+            submit: Fortsett
+
+        configure_php:
+            title: Konfigurasjon
+            info: >
+                PHP-binær funnet.
+                Hvis du vil velge filen selv, kan du spesifisere den her.
+            pathInput: PHP-binær
+            submit: Lagre konfigurasjon
+
+        update:
+            title: Oppdaterer Shopware
+            log: Logg
+            backupHint: Sørg for at du har laget en sikkerhetskopi før du oppdaterer.
+            submit: Oppdater Shopware
+            currentVersion: 'Nåværende versjon: %version%'
+            updateVersion: 'Oppdateringsversjon:'
+            error: >
+                Oppdateringsprosessen mislyktes.
+                Du kan få tilgang til loggfilen <a href="#" id="download-log">her</a>.
+
+        finish:
+            title: Fullfør
+            message: |
+                Installasjonsprosessen er fullført med suksess.
+
+                På neste trinn vil gjenopprettingsfilene bli fjernet fra serveren.
+                Du vil deretter bli omdirigert til Shopware-administrasjonen.
+            submit: Åpne administrasjon
+
+        install:
+            title: Last ned Shopware
+            info: >
+                Velg en Shopware-versjon for nedlasting.
+                Programvaren vil bli lastet ned til gjeldende mappe.
+            shopwareVersion: 'Shopware-versjon:'
+            after_install: >
+                Etter nedlasting bør du endre dokumentroten til den nyopprettede mappen <strong>public</strong>.
+            log: Logg
+            installation_failed: Nedlasting mislyktes
+            submit: Last ned
+            error: >
+                Shopware kunne ikke lastes ned.
+                Du kan få tilgang til loggfilen <a href="#" id="download-log">her</a>.

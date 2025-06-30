@@ -3,8 +3,19 @@ shopware.update:
     back: Zurück
     rc_hint: (Nicht für die Produktivumgebung empfohlen)
     language:
-        en: Englisch
         de: Deutsch
+        en: English (United Kingdom)
+        'en-US': English (United States)
+        cs: Čeština
+        'es-ES': Español
+        fr: Français
+        it: Italiano
+        nl: Nederlands
+        pl: Polski
+        'pt-PT': Português
+        'sv-SE': Svenska
+        da: Dansk
+        no: Norsk
     navigation:
         start: Sprache
         configure_php: Konfigurieren

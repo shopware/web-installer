@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Shopware\WebInstaller\Controller\PhpConfigController;
+use Shopware\WebInstaller\Services\LanguageProvider;
 use Shopware\WebInstaller\Services\PhpBinaryFinder;
 use Shopware\WebInstaller\Services\RecoveryManager;
 use Symfony\Component\DependencyInjection\Container;
@@ -26,7 +27,7 @@ class PhpConfigControllerTest extends TestCase
 {
     public function testIndex(): void
     {
-        $controller = new PhpConfigController($this->createMock(PhpBinaryFinder::class), $this->createMock(RecoveryManager::class));
+        $controller = new PhpConfigController($this->createMock(PhpBinaryFinder::class), $this->createMock(RecoveryManager::class), $this->createMock(LanguageProvider::class));
         $controller->setContainer($this->buildContainer());
 
         $request = new Request();
@@ -39,7 +40,7 @@ class PhpConfigControllerTest extends TestCase
 
     public function testSetConfigOnUpdate(): void
     {
-        $controller = new PhpConfigController($this->createMock(PhpBinaryFinder::class), $this->createMock(RecoveryManager::class));
+        $controller = new PhpConfigController($this->createMock(PhpBinaryFinder::class), $this->createMock(RecoveryManager::class), $this->createMock(LanguageProvider::class));
         $controller->setContainer($this->buildContainer());
 
         $request = new Request();
@@ -60,7 +61,7 @@ class PhpConfigControllerTest extends TestCase
         $recoveryManager = $this->createMock(RecoveryManager::class);
         $recoveryManager->method('getShopwareLocation')->willThrowException(new \RuntimeException('cannot find shopware'));
 
-        $controller = new PhpConfigController($this->createMock(PhpBinaryFinder::class), $recoveryManager);
+        $controller = new PhpConfigController($this->createMock(PhpBinaryFinder::class), $recoveryManager, $this->createMock(LanguageProvider::class));
         $controller->setContainer($this->buildContainer());
 
         $request = new Request();

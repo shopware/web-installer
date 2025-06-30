@@ -7,6 +7,7 @@ namespace Shopware\WebInstaller\Tests\Controller;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Shopware\WebInstaller\Controller\IndexController;
+use Shopware\WebInstaller\Services\LanguageProvider;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Router;
@@ -25,7 +26,7 @@ class IndexControllerTest extends TestCase
             ->method('generate')
             ->willReturnArgument(0);
 
-        $controller = new IndexController();
+        $controller = new IndexController($this->createMock(LanguageProvider::class));
         $container = new Container();
         $container->set('router', $router);
 

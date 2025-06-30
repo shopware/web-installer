@@ -1,0 +1,77 @@
+shopware.update:
+    header_title: Instalace
+    back: Zpět
+    rc_hint: (Nedoporučuje se pro produkci)
+    language:
+        de: Deutsch
+        en: English (United Kingdom)
+        'en-US': English (United States)
+        cs: Čeština
+        'es-ES': Español
+        fr: Français
+        it: Italiano
+        nl: Nederlands
+        pl: Polski
+        'pt-PT': Português
+        'sv-SE': Svenska
+        da: Dansk
+        no: Norsk
+    navigation:
+        start: Jazyk
+        configure_php: Konfigurace
+        download: Stažení
+        finish: Dokončení
+    steps:
+        start:
+            title: Instalátor Shopware
+            welcomeTitle: Vítejte v instalátoru Shopware
+            welcomeMessage: >
+                Tento proces vás provede kroky nutnými k instalaci nebo aktualizaci Shopware 6.
+            languageSelection: Jazyk instalátoru
+            languageSelectionInfo: >
+                Zde vybraný jazyk platí pouze pro tento instalátor.
+                Pro váš obchod si můžete později vybrat jiný jazyk.
+            submit: Pokračovat
+
+        configure_php:
+            title: Konfigurace
+            info: >
+                Byl nalezen spustitelný soubor PHP.
+                Pokud chcete vybrat soubor sami, můžete jej zde zadat.
+            pathInput: PHP binárka
+            submit: Uložit konfiguraci
+
+        update:
+            title: Aktualizace Shopware
+            log: Protokol
+            backupHint: Ujistěte se, že jste před aktualizací vytvořili zálohu.
+            submit: Aktualizovat Shopware
+            currentVersion: 'Aktuální verze: %version%'
+            updateVersion: 'Verze aktualizace:'
+            error: >
+                Aktualizace se nezdařila.
+                Pro přístup k protokolu klikněte <a href="#" id="download-log">sem</a>.
+
+        finish:
+            title: Dokončit
+            message: |
+                Proces instalace byl úspěšně dokončen.
+
+                V dalším kroku budou ze serveru odstraněny soubory pro obnovu.
+                Poté budete přesměrováni do administrace Shopware.
+            submit: Otevřít administraci
+
+        install:
+            title: Stažení Shopware
+            info: >
+                Vyberte verzi Shopware ke stažení.
+                Software bude stažen do aktuálního adresáře.
+            shopwareVersion: 'Verze Shopware:'
+            after_install: >
+                Po stažení byste měli změnit kořenový adresář na nově vytvořenou složku <strong>public</strong>.
+            log: Protokol
+            installation_failed: Stahování selhalo
+            submit: Stáhnout
+            error: >
+                Shopware se nepodařilo stáhnout.
+                Pro přístup k protokolu klikněte <a href="#" id="download-log">sem</a>.

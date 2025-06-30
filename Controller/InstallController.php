@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Controller;
 
+use Shopware\WebInstaller\Services\LanguageProvider;
 use Shopware\WebInstaller\Services\ProjectComposerJsonUpdater;
 use Shopware\WebInstaller\Services\RecoveryManager;
 use Shopware\WebInstaller\Services\ReleaseInfoProvider;
@@ -25,7 +26,8 @@ class InstallController extends AbstractController
         private readonly RecoveryManager $recoveryManager,
         private readonly StreamedCommandResponseGenerator $streamedCommandResponseGenerator,
         private readonly ReleaseInfoProvider $releaseInfoProvider,
-        private readonly ProjectComposerJsonUpdater $projectComposerJsonUpdater
+        private readonly ProjectComposerJsonUpdater $projectComposerJsonUpdater,
+        private readonly LanguageProvider $languageProvider,
     ) {}
 
     #[Route('/install', name: 'install', defaults: ['step' => 2])]
@@ -35,6 +37,7 @@ class InstallController extends AbstractController
 
         return $this->render('install.html.twig', [
             'versions' => $versions,
+            'supportedLanguages' => $this->languageProvider->getSupportedLanguages(),
         ]);
     }
 
@@ -64,7 +67,12 @@ class InstallController extends AbstractController
             ];
 
             if ($process->isSuccessful()) {
-                $data['newLocation'] = $request->getBasePath() . '/public/';
+                $locale = $request->getLocale();
+                $langQuery = $locale
+                    ? '?language=' . rawurlencode($locale)
+                    : '';
+
+                $data['newLocation'] = $request->getBasePath() . '/public/' . $langQuery;
             }
 
             echo json_encode($data);

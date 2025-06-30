@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Shopware\WebInstaller\Controller\InstallController;
+use Shopware\WebInstaller\Services\LanguageProvider;
 use Shopware\WebInstaller\Services\ProjectComposerJsonUpdater;
 use Shopware\WebInstaller\Services\RecoveryManager;
 use Shopware\WebInstaller\Services\ReleaseInfoProvider;
@@ -37,7 +38,7 @@ class InstallControllerTest extends TestCase
         $responseGenerator = $this->createMock(StreamedCommandResponseGenerator::class);
         $responseGenerator->method('runJSON')->willReturn(new StreamedResponse());
 
-        $controller = new InstallController($recovery, $responseGenerator, $this->createMock(ReleaseInfoProvider::class), $this->createMock(ProjectComposerJsonUpdater::class));
+        $controller = new InstallController($recovery, $responseGenerator, $this->createMock(ReleaseInfoProvider::class), $this->createMock(ProjectComposerJsonUpdater::class), $this->createMock(LanguageProvider::class));
         $controller->setContainer($this->buildContainer());
 
         $response = $controller->index();
@@ -72,7 +73,7 @@ class InstallControllerTest extends TestCase
             ])
             ->willReturn(new StreamedResponse());
 
-        $controller = new InstallController($recovery, $responseGenerator, $this->createMock(ReleaseInfoProvider::class), $this->createMock(ProjectComposerJsonUpdater::class));
+        $controller = new InstallController($recovery, $responseGenerator, $this->createMock(ReleaseInfoProvider::class), $this->createMock(ProjectComposerJsonUpdater::class), $this->createMock(LanguageProvider::class));
         $controller->setContainer($this->buildContainer());
 
         $request = new Request();

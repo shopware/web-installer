@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Shopware\WebInstaller\Controller\UpdateController;
 use Shopware\WebInstaller\Services\FlexMigrator;
+use Shopware\WebInstaller\Services\LanguageProvider;
 use Shopware\WebInstaller\Services\ProjectComposerJsonUpdater;
 use Shopware\WebInstaller\Services\RecoveryManager;
 use Shopware\WebInstaller\Services\ReleaseInfoProvider;
@@ -46,6 +47,7 @@ class UpdateControllerTest extends TestCase
             $this->createMock(FlexMigrator::class),
             $this->createMock(StreamedCommandResponseGenerator::class),
             $this->createMock(ProjectComposerJsonUpdater::class),
+            $this->createMock(LanguageProvider::class),
         );
 
         $controller->setContainer($this->buildContainer());
@@ -71,6 +73,7 @@ class UpdateControllerTest extends TestCase
             $this->createMock(FlexMigrator::class),
             $this->createMock(StreamedCommandResponseGenerator::class),
             $this->createMock(ProjectComposerJsonUpdater::class),
+            $this->createMock(LanguageProvider::class),
         );
         $controller->setContainer($this->buildContainer());
 
@@ -95,6 +98,7 @@ class UpdateControllerTest extends TestCase
             $this->createMock(FlexMigrator::class),
             $this->createMock(StreamedCommandResponseGenerator::class),
             $this->createMock(ProjectComposerJsonUpdater::class),
+            $this->createMock(LanguageProvider::class),
         );
         $controller->setContainer($this->buildContainer());
 
@@ -140,6 +144,7 @@ class UpdateControllerTest extends TestCase
             $flexMigrator,
             $this->createMock(StreamedCommandResponseGenerator::class),
             $this->createMock(ProjectComposerJsonUpdater::class),
+            $this->createMock(LanguageProvider::class),
         );
 
         $controller->setContainer($this->buildContainer());
@@ -176,6 +181,7 @@ class UpdateControllerTest extends TestCase
             $this->createMock(FlexMigrator::class),
             $responseGenerator,
             $this->createMock(ProjectComposerJsonUpdater::class),
+            $this->createMock(LanguageProvider::class),
         );
         $controller->setContainer($this->buildContainer());
 
@@ -213,6 +219,7 @@ class UpdateControllerTest extends TestCase
             $this->createMock(FlexMigrator::class),
             $responseGenerator,
             $this->createMock(ProjectComposerJsonUpdater::class),
+            $this->createMock(LanguageProvider::class),
         );
         $controller->setContainer($this->buildContainer());
 
@@ -268,6 +275,7 @@ class UpdateControllerTest extends TestCase
             $this->createMock(FlexMigrator::class),
             $responseGenerator,
             $this->createMock(ProjectComposerJsonUpdater::class),
+            $this->createMock(LanguageProvider::class),
         );
         $controller->setContainer($this->buildContainer());
 
@@ -323,6 +331,7 @@ class UpdateControllerTest extends TestCase
             $this->createMock(FlexMigrator::class),
             $responseGenerator,
             $this->createMock(ProjectComposerJsonUpdater::class),
+            $this->createMock(LanguageProvider::class),
         );
         $controller->setContainer($this->buildContainer());
 
@@ -394,6 +403,7 @@ class UpdateControllerTest extends TestCase
             $this->createMock(FlexMigrator::class),
             $responseGenerator,
             $this->createMock(ProjectComposerJsonUpdater::class),
+            $this->createMock(LanguageProvider::class),
         );
         $controller->setContainer($this->buildContainer());
 
@@ -446,6 +456,7 @@ class UpdateControllerTest extends TestCase
             $this->createMock(FlexMigrator::class),
             $responseGenerator,
             $this->createMock(ProjectComposerJsonUpdater::class),
+            $this->createMock(LanguageProvider::class),
         );
         $controller->setContainer($this->buildContainer());
 

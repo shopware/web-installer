@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Listener;
 
+use Shopware\WebInstaller\Services\LanguageProvider;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -13,12 +14,15 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class InstallerLocaleListener
 {
-    public const FALLBACK_LOCALE = 'en';
-
     /**
      * @var list<string>
      */
-    private array $installerLanguages = ['de', 'en'];
+    private array $installerLanguages;
+
+    public function __construct(LanguageProvider $languageProvider)
+    {
+        $this->installerLanguages = array_values($languageProvider->getSupportedLanguages());
+    }
 
     #[AsEventListener(RequestEvent::class, priority: 15)]
     public function __invoke(RequestEvent $event): void
@@ -46,20 +50,19 @@ class InstallerLocaleListener
             return (string) $session->get('language');
         }
 
-        // get initial language from browser header
-        if ($request->headers->has('HTTP_ACCEPT_LANGUAGE')) {
-            $browserLanguage = explode(',', $request->headers->get('HTTP_ACCEPT_LANGUAGE', ''));
-            $browserLanguage = mb_strtolower(mb_substr($browserLanguage[0], 0, 2));
+        $mappedLanguages = array_map(
+            fn(string $l): string => str_replace('-', '_', $l),
+            $this->installerLanguages
+        );
 
-            if (\in_array($browserLanguage, $this->installerLanguages, true)) {
-                $session->set('language', $browserLanguage);
+        // fallback: get preferred language from browser header, or default to first supported
+        $preferredLanguage = $request->getPreferredLanguage($mappedLanguages)
+            ?? $mappedLanguages[0];
 
-                return $browserLanguage;
-            }
-        }
+        $preferredLanguage = str_replace('_', '-', $preferredLanguage);
 
-        $session->set('language', self::FALLBACK_LOCALE);
+        $session->set('language', $preferredLanguage);
 
-        return self::FALLBACK_LOCALE;
+        return $preferredLanguage;
     }
 }

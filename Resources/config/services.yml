@@ -11,3 +11,19 @@ services:
     resource: '../../Controller'
     public: true
     tags: ['controller.service_arguments']
+
+parameters:
+    shopware.installer.supportedLanguages:
+        'en-US': 'en-US'
+        en: 'en'
+        de: 'de'
+        cs: 'cs'
+        'es-ES': 'es-ES'
+        fr: 'fr'
+        it: 'it'
+        nl: 'nl'
+        pl: 'pl'
+        'pt-PT': 'pt-PT'
+        'sv-SE': 'sv-SE'
+        da: 'da-DK'
+        no: 'no'

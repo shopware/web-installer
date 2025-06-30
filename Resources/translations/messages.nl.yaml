@@ -1,0 +1,79 @@
+shopware.update:
+    header_title: Installatie
+    back: Terug
+    rc_hint: (Niet aanbevolen voor productie)
+    language:
+        de: Deutsch
+        en: English (United Kingdom)
+        'en-US': English (United States)
+        cs: Čeština
+        'es-ES': Español
+        fr: Français
+        it: Italiano
+        nl: Nederlands
+        pl: Polski
+        'pt-PT': Português
+        'sv-SE': Svenska
+        da: Dansk
+        no: Norsk
+    navigation:
+        start: Taal
+        configure_php: Configuratie
+        download: Download
+        finish: Voltooien
+    steps:
+        start:
+            title: Shopware-installatie
+            welcomeTitle: Welkom bij de Shopware-installatie
+            welcomeMessage: >
+                Dit proces begeleidt je door de stappen die nodig zijn
+                om Shopware 6 te installeren of bij te werken.
+            languageSelection: Installatietaal
+            languageSelectionInfo: >
+                De hier gekozen taal geldt alleen voor deze installatie.
+                Je kunt later een andere taal voor je shop kiezen.
+            submit: Doorgaan
+
+        configure_php:
+            title: Configuratie
+            info: >
+                PHP-binaire gevonden.
+                Als je zelf een bestand wilt selecteren, kun je dat hier opgeven.
+            pathInput: PHP-binaire
+            submit: Configuratie opslaan
+
+        update:
+            title: Shopware bijwerken
+            log: Log
+            backupHint: Zorg dat je een back-up hebt gemaakt voordat je bijwerkt.
+            submit: Shopware bijwerken
+            currentVersion: 'Huidige versie: %version%'
+            updateVersion: 'Bijwerkversie:'
+            error: >
+                Bijwerkproces mislukt.
+                Je kunt het logbestand <a href="#" id="download-log">hier</a> openen.
+
+        finish:
+            title: Voltooien
+            message: |
+                Het installatieproces is succesvol afgerond.
+
+                In de volgende stap worden de herstelbestanden van de server verwijderd.
+                Je wordt daarna doorgestuurd naar de Shopware-administratie.
+            submit: Admin openen
+
+        install:
+            title: Download Shopware
+            info: >
+                Kies een Shopware-versie om te downloaden.
+                De software wordt gedownload naar de huidige map.
+            shopwareVersion: 'Shopware-versie:'
+            after_install: >
+                Na het downloaden moet je je documentroot wijzigen
+                naar de nieuw aangemaakte map <strong>public</strong>.
+            log: Log
+            installation_failed: Download mislukt
+            submit: Downloaden
+            error: >
+                Shopware kon niet worden gedownload.
+                Je kunt het logbestand <a href="#" id="download-log">hier</a> openen.

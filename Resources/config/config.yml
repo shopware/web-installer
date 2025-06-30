@@ -3,11 +3,11 @@ imports:
 
 framework:
   secret: ''
-  default_locale: en
+  default_locale: us
   http_method_override: false
   handle_all_throwables: false
   translator:
-    fallbacks: [ 'en' ]
+    fallbacks: [ 'us' ]
     cache_dir: null
     default_path: '%kernel.project_dir%/Resources/translations'
   session:

@@ -1,0 +1,79 @@
+shopware.update:
+    header_title: Instalação
+    back: Voltar
+    rc_hint: (Não recomendado para produção)
+    language:
+        de: Deutsch
+        en: English (United Kingdom)
+        'en-US': English (United States)
+        cs: Čeština
+        'es-ES': Español
+        fr: Français
+        it: Italiano
+        nl: Nederlands
+        pl: Polski
+        'pt-PT': Português
+        'sv-SE': Svenska
+        da: Dansk
+        no: Norsk
+    navigation:
+        start: Idioma
+        configure_php: Configuração
+        download: Transferir
+        finish: Concluir
+    steps:
+        start:
+            title: Instalador do Shopware
+            welcomeTitle: Bem-vindo ao Instalador do Shopware
+            welcomeMessage: >
+                Este processo irá guiá-lo através dos passos necessários
+                para instalar ou atualizar o Shopware 6.
+            languageSelection: Idioma do instalador
+            languageSelectionInfo: >
+                O idioma selecionado aqui aplica-se apenas a este instalador.
+                Pode escolher outro idioma para a sua loja mais tarde.
+            submit: Continuar
+
+        configure_php:
+            title: Configuração
+            info: >
+                Binário PHP encontrado.
+                Se quiser selecionar o ficheiro manualmente, pode especificá-lo aqui.
+            pathInput: Binário PHP
+            submit: Guardar configuração
+
+        update:
+            title: Atualizando o Shopware
+            log: Log
+            backupHint: Certifique-se de que criou um backup antes de atualizar.
+            submit: Atualizar o Shopware
+            currentVersion: 'Versão atual: %version%'
+            updateVersion: 'Versão de atualização:'
+            error: >
+                Processo de atualização sem sucesso.
+                Pode aceder ao ficheiro de log <a href="#" id="download-log">aqui</a>.
+
+        finish:
+            title: Concluir
+            message: |
+                O processo de instalação foi concluído com sucesso.
+
+                No próximo passo, os ficheiros de recuperação serão removidos do servidor.
+                Será então redirecionado para a Administração do Shopware.
+            submit: Abrir Administração
+
+        install:
+            title: Transferir o Shopware
+            info: >
+                Escolha uma versão do Shopware para transferir.
+                O software será transferido para o diretório atual.
+            shopwareVersion: 'Versão do Shopware:'
+            after_install: >
+                Após a transferência, deve alterar a raiz do documento
+                para a pasta recém-criada <strong>public</strong>.
+            log: Log
+            installation_failed: Transferência falhou
+            submit: Transferir
+            error: >
+                Não foi possível transferir o Shopware.
+                Pode aceder ao ficheiro de log <a href="#" id="download-log">aqui</a>.

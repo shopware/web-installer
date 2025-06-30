@@ -35,6 +35,7 @@ shopware.update:
             info: PHP binary found. If you want to select the file yourself, you can specify it here.
             pathInput: PHP binary
             submit: Save configuration
+
         update:
             title: Updating Shopware
             log: Log
@@ -43,6 +44,7 @@ shopware.update:
             currentVersion: 'Current version: %version%'
             updateVersion: 'Update version:'
             error: 'Update process unsuccessful. You can access the log file <a href="#" id="download-log">here</a>.'
+
         finish:
             title: Finish
             message: |
@@ -50,6 +52,7 @@ shopware.update:
 
                 In the next step the recovery files will be removed from the server. You will be redirected to the Shopware Administration afterwards.
             submit: Open Administration
+
         install:
             title: Download Shopware
             info: Choose a Shopware version to download. The software will be downloaded into the current directory.
