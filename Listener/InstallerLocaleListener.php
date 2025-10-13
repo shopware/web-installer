@@ -21,7 +21,7 @@ class InstallerLocaleListener
 
     public function __construct(LanguageProvider $languageProvider)
     {
-        $this->installerLanguages = array_values($languageProvider->getSupportedLanguages());
+        $this->installerLanguages = \array_keys($languageProvider->getSupportedLanguages());
     }
 
     #[AsEventListener(RequestEvent::class, priority: 15)]
@@ -56,8 +56,7 @@ class InstallerLocaleListener
         );
 
         // fallback: get preferred language from browser header, or default to first supported
-        $preferredLanguage = $request->getPreferredLanguage($mappedLanguages)
-            ?? $mappedLanguages[0];
+        $preferredLanguage = $request->getPreferredLanguage($mappedLanguages) ?? $mappedLanguages[0];
 
         $preferredLanguage = str_replace('_', '-', $preferredLanguage);
 

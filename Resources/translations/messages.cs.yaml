@@ -1,5 +1,6 @@
 shopware.update:
     header_title: Instalace
+    continue: Pokračovat
     back: Zpět
     rc_hint: (Nedoporučuje se pro produkci)
     language:
@@ -17,29 +18,30 @@ shopware.update:
         da: Dansk
         no: Norsk
     navigation:
-        start: Jazyk
-        configure_php: Konfigurace
+        start: Spustit
+        configure_php: &configure_php_title Binární soubor PHP
         download: Stažení
-        finish: Dokončení
+        requirements: Systémové předpoklady
+        license: VOP
+        database-configuration: Konfigurace databáze
+        database-import: Instalace
+        configuration: Konfigurace obchodu
+        finish: Hotovo
     steps:
         start:
             title: Instalátor Shopware
-            welcomeTitle: Vítejte v instalátoru Shopware
+            welcomeTitle: Vítejte v Shopware 6
             welcomeMessage: >
-                Tento proces vás provede kroky nutnými k instalaci nebo aktualizaci Shopware 6.
+              Jsme rádi, že se připojujete k naší globální komunitě Shopware! Tento instalační program vás provede
+              všemi kroky potřebnými k hladké instalaci Shopware 6.
             languageSelection: Jazyk instalátoru
-            languageSelectionInfo: >
-                Zde vybraný jazyk platí pouze pro tento instalátor.
-                Pro váš obchod si můžete později vybrat jiný jazyk.
-            submit: Pokračovat
 
         configure_php:
-            title: Konfigurace
+            title: *configure_php_title
             info: >
                 Byl nalezen spustitelný soubor PHP.
                 Pokud chcete vybrat soubor sami, můžete jej zde zadat.
             pathInput: PHP binárka
-            submit: Uložit konfiguraci
 
         update:
             title: Aktualizace Shopware
@@ -75,3 +77,11 @@ shopware.update:
             error: >
                 Shopware se nepodařilo stáhnout.
                 Pro přístup k protokolu klikněte <a href="#" id="download-log">sem</a>.
+
+    help:
+      title: Potřebujete pomoc?
+      support_channel: Vyberte si kanál podpory, který vám nejvíce vyhovuje
+      forum: Fórum
+      phone_number_call: +492555928850
+      phone_number_formatted: (+49) 2555 928850
+      email: E-mail

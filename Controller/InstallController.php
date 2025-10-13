@@ -23,11 +23,11 @@ use Symfony\Component\Routing\Attribute\Route;
 class InstallController extends AbstractController
 {
     public function __construct(
-        private readonly RecoveryManager $recoveryManager,
+        private readonly RecoveryManager                  $recoveryManager,
         private readonly StreamedCommandResponseGenerator $streamedCommandResponseGenerator,
-        private readonly ReleaseInfoProvider $releaseInfoProvider,
-        private readonly ProjectComposerJsonUpdater $projectComposerJsonUpdater,
-        private readonly LanguageProvider $languageProvider,
+        private readonly ReleaseInfoProvider              $releaseInfoProvider,
+        private readonly ProjectComposerJsonUpdater       $projectComposerJsonUpdater,
+        private readonly LanguageProvider                 $languageProvider,
     ) {}
 
     #[Route('/install', name: 'install', defaults: ['step' => 2])]
@@ -67,12 +67,15 @@ class InstallController extends AbstractController
             ];
 
             if ($process->isSuccessful()) {
+                $queryParams = [
+                    'ext_steps' => 1,
+                ];
                 $locale = $request->getLocale();
-                $langQuery = $locale
-                    ? '?language=' . rawurlencode($locale)
-                    : '';
+                if ($locale) {
+                    $queryParams['language'] = rawurlencode($locale);
+                }
 
-                $data['newLocation'] = $request->getBasePath() . '/public/' . $langQuery;
+                $data['newLocation'] = $request->getBasePath() . '/public/' . \http_build_query($queryParams);
             }
 
             echo json_encode($data);

@@ -21,6 +21,36 @@
                 INSTALLER
             </div>
         </div>
+
+        <div class="header-main__right">
+            <div class="header-main__language-selection">
+                <form action="{{ app.request.uri }}" method="get">
+                    <label for="language">
+                        {{ 'shopware.update.steps.start.languageSelection'|trans }}
+                    </label>
+                    <div class="select-wrapper language">
+                        <img class="language-flag"
+                             src="{{ app.request.baseUrl }}/assets/images/flags/{{ app.request.locale }}.svg"
+                             alt="{{ app.request.locale }}">
+                        <select
+                                id="language"
+                                name="language"
+                                class="language-selection"
+                                onchange="this.form.submit();"
+                        >
+                            {% for baseTag, language in supportedLanguages %}
+                                <option
+                                        value="{{ baseTag }}"
+                                        data-flag="{{ baseTag }}"
+                                        {% if app.request.locale == baseTag %}selected{% endif %}>
+                                    {{ language.label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
     </header>
 
     <div class="page--wrap">
@@ -42,6 +72,26 @@
                     </li>
 
                     <li class="navigation--entry{% if navigationPosition == '3' %} is--active{% endif %}">
+                        <span class="navigation--link">{{ 'shopware.update.navigation.requirements'|trans }}</span>
+                    </li>
+
+                    <li class="navigation--entry{% if navigationPosition == '3' %} is--active{% endif %}">
+                        <span class="navigation--link">{{ 'shopware.update.navigation.license'|trans }}</span>
+                    </li>
+
+                    <li class="navigation--entry{% if navigationPosition == '3' %} is--active{% endif %}">
+                        <span class="navigation--link">{{ 'shopware.update.navigation.database-configuration'|trans }}</span>
+                    </li>
+
+                    <li class="navigation--entry{% if navigationPosition == '3' %} is--active{% endif %}">
+                        <span class="navigation--link">{{ 'shopware.update.navigation.database-import'|trans }}</span>
+                    </li>
+
+                    <li class="navigation--entry{% if navigationPosition == '3' %} is--active{% endif %}">
+                        <span class="navigation--link">{{ 'shopware.update.navigation.configuration'|trans }}</span>
+                    </li>
+
+                    <li class="navigation--entry{% if navigationPosition == '3' %} is--active{% endif %}">
                         <span class="navigation--link">{{ 'shopware.update.navigation.finish'|trans }}</span>
                     </li>
                 </ul>
@@ -52,12 +102,13 @@
         </div>
     </div>
     <div class="footer-main">
-        {% for language in supportedLanguages %}
-            <a href="?language={{ language }}"
-               class="language-item {% if app.request.locale == language %}is--active{% endif %}">
-                {{ language|upper }}
+        <div class="help-container">
+            {% set tooltipContent %}{% include '_help_tooltip.html.twig' %}{% endset %}
+            <i class="icon-help"></i>
+            <a class="help-badge" href="#" data-tooltip="{{ tooltipContent|e('html_attr') }}">
+                {{ 'shopware.update.help.title'|trans }}
             </a>
-        {% endfor %}
+        </div>
     </div>
     <script>
         const baseUrl = '{{ app.request.baseUrl }}';

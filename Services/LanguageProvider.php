@@ -4,23 +4,30 @@ namespace Shopware\WebInstaller\Services;
 
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
+/**
+ * @internal
+ * @phpstan-type SupportedLanguages array<string, array{id: string, label: string}>
+ */
 class LanguageProvider
 {
-    /** @var array<string, string> */
+    /** @var SupportedLanguages */
     private array $supportedLanguages = [];
 
     public function __construct(ParameterBagInterface $params)
     {
         $languages = $params->get('shopware.installer.supportedLanguages');
         if (is_array($languages)) {
-            /** @var array<string, string> $languages */
+            ksort($languages);
+            /** @var SupportedLanguages $languages */
             $this->supportedLanguages = $languages;
         }
     }
 
-    /** @return array<string> */
+    /**
+     * @return SupportedLanguages
+     */
     public function getSupportedLanguages(): array
     {
-        return array_keys($this->supportedLanguages);
+        return $this->supportedLanguages;
     }
 }

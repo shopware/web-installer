@@ -1,5 +1,6 @@
 shopware.update:
     header_title: Instalacja
+    continue: Kontynuuj
     back: Wstecz
     rc_hint: (Nie zaleca się do produkcji)
     language:
@@ -17,30 +18,30 @@ shopware.update:
         da: Dansk
         no: Norsk
     navigation:
-        start: Język
-        configure_php: Konfiguracja
+        start: Start
+        configure_php: &configure_php_title Plik binarny PHP
         download: Pobierz
-        finish: Zakończ
+        requirements: Wymagania systemowe
+        license: OWH
+        database-configuration: Konfiguracja bazy danych
+        database-import: Instalacja
+        configuration: Konfiguracja sklepu
+        finish: Gotowe
     steps:
         start:
             title: Instalator Shopware
-            welcomeTitle: Witamy w instalatorze Shopware
+            welcomeTitle: Witamy w Shopware 6
             welcomeMessage: >
-                Ten proces przeprowadzi Cię przez kroki niezbędne
-                do zainstalowania lub zaktualizowania Shopware 6.
+              Cieszymy się, że dołączyłeś do naszej globalnej społeczności Shopware! Ten instalator poprowadzi Cię 
+              przez wszystkie kroki niezbędne do płynnej instalacji Shopware 6.
             languageSelection: Język instalatora
-            languageSelectionInfo: >
-                Wybrany tutaj język dotyczy tylko tego instalatora.
-                Później możesz wybrać inny język dla swojego sklepu.
-            submit: Kontynuuj
 
         configure_php:
-            title: Konfiguracja
+            title: *configure_php_title
             info: >
                 Znaleziono plik wykonywalny PHP.
                 Jeśli chcesz wybrać plik samodzielnie, podaj go tutaj.
             pathInput: Plik wykonywalny PHP
-            submit: Zapisz konfigurację
 
         update:
             title: Aktualizacja Shopware
@@ -77,3 +78,11 @@ shopware.update:
             error: >
                 Nie udało się pobrać Shopware.
                 Dziennik możesz pobrać <a href="#" id="download-log">tutaj</a>.
+
+    help:
+      title: Potrzebujesz pomocy?
+      support_channel: Wybierz kanał pomocy, który Ci odpowiada
+      forum: Forum
+      phone_number_call: +492555928850
+      phone_number_formatted: (+49) 2555 928850
+      email: E-mail

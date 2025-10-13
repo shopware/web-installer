@@ -10,20 +10,46 @@ services:
   Shopware\WebInstaller\Controller\:
     resource: '../../Controller'
     public: true
-    tags: ['controller.service_arguments']
+    tags: [ 'controller.service_arguments' ]
 
 parameters:
-    shopware.installer.supportedLanguages:
-        'en-US': 'en-US'
-        en: 'en'
-        de: 'de'
-        cs: 'cs'
-        'es-ES': 'es-ES'
-        fr: 'fr'
-        it: 'it'
-        nl: 'nl'
-        pl: 'pl'
-        'pt-PT': 'pt-PT'
-        'sv-SE': 'sv-SE'
-        da: 'da-DK'
-        no: 'no'
+  shopware.installer.supportedLanguages:
+    cs:
+      id: cs-CZ
+      label: Čeština
+    da-DK:
+      id: da-DK
+      label: Dansk
+    de:
+      id: de-DE
+      label: Deutsch
+    en-US:
+      id: en-US
+      label: English (US)
+    en:
+      id: en-GB
+      label: English (UK)
+    es-ES:
+      id: es-ES
+      label: Español
+    fr:
+      id: fr-FR
+      label: Français
+    it:
+      id: it-IT
+      label: Italiano
+    nl:
+      id: nl-NL
+      label: Nederlands
+    no:
+      id: nn-NO
+      label: Norsk
+    pl:
+      id: pl-PL
+      label: Język polski
+    pt-PT:
+      id: pt-PT
+      label: Português
+    sv-SE:
+      id: sv-SE
+      label: Svenska

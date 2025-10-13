@@ -1,5 +1,6 @@
 shopware.update:
     header_title: Installation
+    continue: Continue
     back: Back
     rc_hint: (Not recommended for production)
     language:
@@ -17,24 +18,28 @@ shopware.update:
         da: Dansk
         no: Norsk
     navigation:
-        start: Language
-        configure_php: Configuration
+        start: Start
+        configure_php: &configure_php_title PHP binary
         download: Download
+        requirements: System requirements
+        license: GTC
+        database-configuration: Database configuration
+        database-import: Installation
+        configuration: Shop configuration
         finish: Finish
     steps:
         start:
             title: Shopware Installer
-            welcomeTitle: Welcome to the Shopware Installer
-            welcomeMessage: This process will guide you through the steps necessary to install or update Shopware 6.
+            welcomeTitle: Welcome to Shopware 6
+            welcomeMessage: >
+              We’re delighted you’re joining our global Shopware community! This installer will guide you through each
+              step required to install Shopware 6 smoothly.
             languageSelection: Installer language
-            languageSelectionInfo: The language selected here only applies to this installer. You may choose another language for your shop later on.
-            submit: Continue
 
         configure_php:
-            title: Configuration
+            title: *configure_php_title
             info: PHP binary found. If you want to select the file yourself, you can specify it here.
             pathInput: PHP binary
-            submit: Save configuration
 
         update:
             title: Updating Shopware
@@ -62,3 +67,11 @@ shopware.update:
             installation_failed: Download failed
             submit: Download
             error: 'Shopware could not be downloaded. You can access the log file <a href="#" id="download-log">here</a>.'
+
+    help:
+      title: Need help?
+      support_channel: Choose the support channel that suits you
+      forum: Forum
+      phone_number_call: 008007467626
+      phone_number_formatted: 00 800 746 7626 0 (free of charge)
+      email: Email
