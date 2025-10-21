@@ -213,11 +213,6 @@ textarea:disabled {
     opacity: 1;
 }
 
-::-ms-placeholder {
-    color: var(--color-gray-500);
-    opacity: 1;
-}
-
 ::placeholder {
     color: var(--color-gray-500);
     opacity: 1;
@@ -248,7 +243,7 @@ textarea:disabled {
 .select-wrapper:after {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
+    translate: 0 -50%;
     right: 20px;
     line-height: 1;
     font-size: 12px;
@@ -263,7 +258,7 @@ textarea:disabled {
 .select-wrapper.language .language-flag {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
+    translate: 0 -50%;
     width: 20px;
     left: 18px;
     border-radius: 2px;
@@ -918,7 +913,7 @@ table .notice-text td p {
     left: 16px;
     flex-shrink: 0;
     border-radius: 50%;
-    transform: translate(-50%, 0);
+    translate: -50% 0;
 }
 
 .navigation--main .is--active:before {
@@ -1062,7 +1057,7 @@ table .notice-text td p {
     position: absolute;
     bottom: 100%;
     right: 12px;
-    transform: translateY(11px);
+    translate: 0 11px;
     border: 6px solid transparent;
     background: transparent;
     border-top-color: var(--color-biscay);
