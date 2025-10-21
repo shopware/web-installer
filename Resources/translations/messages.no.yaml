@@ -1,5 +1,6 @@
 shopware.update:
     header_title: Installasjon
+    continue: Fortsett
     back: Tilbake
     rc_hint: (Anbefales ikke i produksjon)
     language:
@@ -17,30 +18,30 @@ shopware.update:
         da: Dansk
         no: Norsk
     navigation:
-        start: Språk
-        configure_php: Konfigurasjon
+        start: Start
+        configure_php: &configure_php_title PHP-binærfil
         download: Last ned
-        finish: Fullfør
+        requirements: Systemkrav
+        license: Generelle betingelser
+        database-configuration: Databasekonfigurasjon
+        database-import: Installasjon
+        configuration: Butikkkonfigurasjon
+        finish: Ferdig
     steps:
         start:
             title: Shopware-installasjonsprogram
-            welcomeTitle: Velkommen til Shopware-installasjonsprogrammet
+            welcomeTitle: Velkommen til Shopware 6
             welcomeMessage: >
-                Denne prosessen vil veilede deg gjennom trinnene som trengs
-                for å installere eller oppdatere Shopware 6.
+              Vi er glade for at du blir med i vårt globale Shopware-fellesskap! Dette installasjonsprogrammet vil
+              guide deg gjennom hvert trinn som kreves for å installere Shopware 6 på en smidig måte.
             languageSelection: Installeringsspråk
-            languageSelectionInfo: >
-                Språket valgt her gjelder kun for dette installasjonsprogrammet.
-                Du kan velge et annet språk for butikken din senere.
-            submit: Fortsett
 
         configure_php:
-            title: Konfigurasjon
+            title: *configure_php_title
             info: >
                 PHP-binær funnet.
                 Hvis du vil velge filen selv, kan du spesifisere den her.
             pathInput: PHP-binær
-            submit: Lagre konfigurasjon
 
         update:
             title: Oppdaterer Shopware
@@ -76,3 +77,11 @@ shopware.update:
             error: >
                 Shopware kunne ikke lastes ned.
                 Du kan få tilgang til loggfilen <a href="#" id="download-log">her</a>.
+
+    help:
+      title: Trenger du hjelp?
+      support_channel: Velg den supportkanalen som passer deg best
+      forum: Forum
+      phone_number_call: 008007467626
+      phone_number_formatted: 00 800 746 7626 0 (gratis)
+      email: E-post

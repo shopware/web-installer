@@ -46,8 +46,12 @@ if (installButton) {
 
         installButton.disabled = true;
 
-        const shopwareVersion = document.getElementById('shopwareVersion');
+        const languageSelect = document.getElementById('language');
+        if (languageSelect) {
+            languageSelect.disabled = true;
+        }
 
+        const shopwareVersion = document.getElementById('shopwareVersion');
         const installResponse = await fetch(`${baseUrl}/install/_run?shopwareVersion=` + shopwareVersion.value, {method: 'POST'});
 
         try {
@@ -60,6 +64,9 @@ if (installButton) {
             }
         } catch (e) {
             console.log(e);
+            if (languageSelect) {
+                languageSelect.disabled = false;
+            }
             return showLog();
         }
     }
@@ -156,3 +163,45 @@ if (downloadLogButton) {
         document.body.removeChild(element);
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const tooltipElements = document.querySelectorAll('[data-tooltip]');
+
+    tooltipElements.forEach(function (element) {
+        // Create tooltip container
+        const tooltipContainer = document.createElement('div');
+        tooltipContainer.className = 'tooltip-content';
+        tooltipContainer.innerHTML = element.getAttribute('data-tooltip');
+        element.appendChild(tooltipContainer);
+
+        // Create tooltip arrow
+        const tooltipArrow = document.createElement('div');
+        tooltipArrow.className = 'tooltip-arrow';
+        element.appendChild(tooltipArrow);
+
+        // Prevent clicks inside tooltip content from closing it
+        tooltipContainer.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+
+        element.addEventListener('click', function (e) {
+            e.preventDefault();
+            element.classList.toggle('tooltip-active');
+
+            tooltipElements.forEach(function (otherElement) {
+                if (otherElement !== element) {
+                    otherElement.classList.remove('tooltip-active');
+                }
+            });
+        });
+    });
+
+    // Close tooltip when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('[data-tooltip]')) {
+            tooltipElements.forEach(function (element) {
+                element.classList.remove('tooltip-active');
+            });
+        }
+    });
+});

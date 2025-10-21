@@ -1,5 +1,6 @@
 shopware.update:
     header_title: Instalação
+    continue: Continuar
     back: Voltar
     rc_hint: (Não recomendado para produção)
     language:
@@ -17,30 +18,30 @@ shopware.update:
         da: Dansk
         no: Norsk
     navigation:
-        start: Idioma
-        configure_php: Configuração
+        start: Iniciar
+        configure_php: &configure_php_title Ficheiro binário PHP
         download: Transferir
-        finish: Concluir
+        requirements: Requisitos do sistema
+        license: CGV
+        database-configuration: Configuração da base de dados
+        database-import: Instalação
+        configuration: Configuração da loja
+        finish: Pronto
     steps:
         start:
             title: Instalador do Shopware
-            welcomeTitle: Bem-vindo ao Instalador do Shopware
+            welcomeTitle: Bem-vindo ao Shopware 6
             welcomeMessage: >
-                Este processo irá guiá-lo através dos passos necessários
-                para instalar ou atualizar o Shopware 6.
+              Estamos muito felizes por se juntar à nossa comunidade global Shopware! Este instalador irá guiá-lo
+              através de cada etapa necessária para instalar o Shopware 6 sem problemas.
             languageSelection: Idioma do instalador
-            languageSelectionInfo: >
-                O idioma selecionado aqui aplica-se apenas a este instalador.
-                Pode escolher outro idioma para a sua loja mais tarde.
-            submit: Continuar
 
         configure_php:
-            title: Configuração
+            title: *configure_php_title
             info: >
                 Binário PHP encontrado.
                 Se quiser selecionar o ficheiro manualmente, pode especificá-lo aqui.
             pathInput: Binário PHP
-            submit: Guardar configuração
 
         update:
             title: Atualizando o Shopware
@@ -77,3 +78,11 @@ shopware.update:
             error: >
                 Não foi possível transferir o Shopware.
                 Pode aceder ao ficheiro de log <a href="#" id="download-log">aqui</a>.
+
+    help:
+      title: Precisa de ajuda?
+      support_channel: Escolha o canal de suporte que mais lhe convier
+      forum: Fórum
+      phone_number_call: +492555928850
+      phone_number_formatted: (+49) 2555 928850
+      email: E-mail

@@ -1,3 +1,4 @@
+/*region Variables*/
 /* ==========================================================================
    Variables
    ========================================================================== */
@@ -29,8 +30,16 @@
     --border-radius-default: 4px;
     --box-shadow-field: 0 0 4px 0 rgba(24, 158, 255, 0.3);
     --font-family-default: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-size-s: 16px;
+    --font-size-2xs: 12px;
+    --font-line-height-s: 26px;
+    --font-line-height-2xs: 18px;
 }
+/*endregion*/
 
+/*region Global*/
 /* ==========================================================================
    Global
    ========================================================================== */
@@ -119,7 +128,9 @@ h6 {
 a {
     color: var(--color-shopware-brand-500);
 }
+/*endregion*/
 
+/*region Forms and Inputs*/
 /* ==========================================================================
    Forms and Inputs
    ========================================================================== */
@@ -202,11 +213,6 @@ textarea:disabled {
     opacity: 1;
 }
 
-::-ms-placeholder {
-    color: var(--color-gray-500);
-    opacity: 1;
-}
-
 ::placeholder {
     color: var(--color-gray-500);
     opacity: 1;
@@ -216,8 +222,11 @@ textarea:disabled {
     border-color: var(--color-crimson-500);
     box-shadow: none;
 }
+/*endregion*/
 
-/* Custom select
+/*region Custom select*/
+/* ==========================================================================
+   Custom select
    ========================================================================== */
 
 .select-wrapper {
@@ -234,7 +243,7 @@ textarea:disabled {
 .select-wrapper:after {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
+    translate: 0 -50%;
     right: 20px;
     line-height: 1;
     font-size: 12px;
@@ -249,13 +258,16 @@ textarea:disabled {
 .select-wrapper.language .language-flag {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
+    translate: 0 -50%;
     width: 20px;
     left: 18px;
     border-radius: 2px;
 }
+/*endregion*/
 
-/* Custom switch
+/*region Custom switch*/
+/* ==========================================================================
+   Custom switch
    ========================================================================== */
 
 .custom-switch {
@@ -310,8 +322,11 @@ textarea:disabled {
     background-color: var(--color-white);
     left: 10px;
 }
+/*endregion*/
 
-/* Custom checkbox
+/*region Custom checkbox*/
+/* ==========================================================================
+   Custom checkbox
    ========================================================================== */
 
 .custom-checkbox {
@@ -377,8 +392,11 @@ textarea:disabled {
 .is--submitted .custom-checkbox input[type="checkbox"]:invalid ~ label:before {
     border-color: var(--color-crimson-500);
 }
+/*endregion*/
 
-/* Input utilities
+/*region Input utilities*/
+/* ==========================================================================
+   Input utilities
    ========================================================================== */
 
 .input-group {
@@ -390,7 +408,9 @@ textarea:disabled {
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 32px;
 }
+/*endregion*/
 
+/*region Button*/
 /* ==========================================================================
    Button
    ========================================================================== */
@@ -451,12 +471,16 @@ button:disabled,
     cursor: default;
     opacity: 0.5;
 }
+/*endregion*/
 
+/*region Alert*/
 /* ==========================================================================
    Alert
    ========================================================================== */
 
-/* Default alert
+/*region Default alert*/
+/* ==========================================================================
+   Default alert
    ========================================================================== */
 
 .alert {
@@ -559,8 +583,11 @@ h3.alert-heading {
     font-size: 50px;
     padding: 0 20px 0 0;
 }
+/*endregion*/
 
-/* Hero alert
+/*region Hero alert*/
+/* ==========================================================================
+   Hero alert
    ========================================================================== */
 
 .alert-hero {
@@ -599,7 +626,11 @@ h3.alert-heading {
 .alert-hero-text {
     color: var(--color-text);
 }
+/*endregion*/
 
+/*endregion*/
+
+/*region Table*/
 /* ==========================================================================
    Table
    ========================================================================== */
@@ -637,7 +668,9 @@ table .notice-text [class^="icon-"] {
 table .notice-text td p {
     margin-bottom: 0;
 }
+/*endregion*/
 
+/*region General layout*/
 /* ==========================================================================
    General layout
    ========================================================================== */
@@ -645,13 +678,21 @@ table .notice-text td p {
 .header-main {
     padding: 28px 32px;
     height: 90px;
-    align-items: center;
+    justify-content: space-between;
+    align-items: flex-start;
     display: flex;
 }
 
 .header-main__branding {
     display: flex;
     align-items: center;
+}
+
+.header-main__right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
 }
 
 .header-main__title {
@@ -689,6 +730,22 @@ table .notice-text td p {
     .navigation--main {
         display: none;
     }
+
+    .header-main {
+        flex-direction: column;
+        align-items: flex-start;
+        height: auto;
+        padding: 20px 16px;
+    }
+
+    .header-main__right {
+        margin-top: 16px;
+    }
+
+    .header-main__language-selection .select-wrapper,
+    .header-main__language-selection .select-wrapper select {
+        width: 160px;
+    }
 }
 
 .content--main {
@@ -724,24 +781,75 @@ table .notice-text td p {
     padding: 20px 32px;
 }
 
+.header-main__language-selection form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-main__language-selection {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-main__language-selection label {
+    color: var(--color-text);
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+
+.header-main__language-selection .select-wrapper {
+    width: 200px;
+}
+
+.header-main__language-selection .select-wrapper select {
+    height: 32px;
+    font-size: 12px;
+    width: 200px;
+    line-height: 32px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.header-main__language-selection .language-flag {
+    width: 16px;
+    left: 12px;
+}
+
+.header-main__language-selection .select-wrapper:after {
+    right: 12px;
+    font-size: 10px;
+}
+
 .footer-main {
     padding: 32px;
     text-align: right;
     height: 90px;
 }
 
-.footer-main .language-item {
-    text-decoration: none;
-    font-weight: 500;
-    display: inline-block;
-    color: var(--color-gray-500);
-    margin-right: 10px;
+.help-container .help-title {
+    font-size: var(--font-size-s);
+    line-height: var(--font-line-height-s);
+    font-weight: var(--font-weight-semibold);
 }
 
-.footer-main .language-item.is--active {
+.footer-main a {
     color: var(--color-text);
+    font-size: var(--font-size-2xs, 12px);
+    font-style: normal;
+    font-weight: var(--font-weight-medium);
+    line-height: var(--font-line-height-2xs, 18px);
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
 }
+/*endregion*/
 
+/*region Main navigation*/
 /* ==========================================================================
    Main navigation
    ========================================================================== */
@@ -805,7 +913,7 @@ table .notice-text td p {
     left: 16px;
     flex-shrink: 0;
     border-radius: 50%;
-    transform: translate(-50%, 0);
+    translate: -50% 0;
 }
 
 .navigation--main .is--active:before {
@@ -840,7 +948,9 @@ table .notice-text td p {
 .is--active .navigation--link {
     color: var(--color-text);
 }
+/*endregion*/
 
+/*region Progress bar*/
 /* ==========================================================================
    Progress bar
    ========================================================================== */
@@ -865,7 +975,9 @@ table .notice-text td p {
     transition: width .6s ease;
     border-radius: 25px;
 }
+/*endregion*/
 
+/*region Loading indicator*/
 /* ==========================================================================
    Loading indicator
    ========================================================================== */
@@ -903,63 +1015,70 @@ table .notice-text td p {
     border-style: solid;
     border-color: #333 #CCC #CCC #CCC;
 }
+/*endregion*/
 
+/*region Tooltip*/
 /* ==========================================================================
    Tooltip
    ========================================================================== */
 
 [data-tooltip] {
     position: relative;
-    cursor: default;
+    cursor: pointer;
     text-decoration: none;
-    --tooltip-transition:
-        opacity 0.2s ease-in-out,
+}
+
+.tooltip-content {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    transform: none;
+    transition: opacity 0.2s ease-in-out,
+        visibility 0.2s ease-in-out,
+        margin-bottom 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+    width: 200px;
+    padding: 8px 12px;
+    background-color: var(--color-white);
+    color: var(--color-text);
+    font-size: 13px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    border-radius: 4px;
+    border: solid 1px var(--color-gray-200);
+    box-shadow: 0 3px 6px 0 var(--color-gray-200);
+    z-index: 1000;
+    margin-bottom: -12px;
+    text-align: left;
+    cursor: default;
+}
+
+.tooltip-arrow {
+    position: absolute;
+    bottom: 100%;
+    right: 12px;
+    translate: 0 11px;
+    border: 6px solid transparent;
+    background: transparent;
+    border-top-color: var(--color-biscay);
+    opacity: 0;
+    visibility: hidden;
+    margin-bottom: -12px;
+    transition: opacity 0.2s ease-in-out,
         visibility 0.2s ease-in-out,
         margin-bottom 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
 }
 
-[data-tooltip]:before {
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    transition: var(--tooltip-transition);
-    width: 280px;
-    padding: 8px 12px;
-    content: attr(data-tooltip);
-    background-color: var(--color-biscay);
-    color: var(--color-white);
-    font-size: 13px;
-    opacity: 0;
-    pointer-events: none;
-    border-radius: 4px;
-    outline: none;
-    z-index: 1000;
-    margin-bottom: -12px;
-}
-
-[data-tooltip]:after {
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%) translateY(11px);
-    border: 6px solid transparent;
-    background: transparent;
-    border-top-color: var(--color-biscay);
-    content: "";
-    opacity: 0;
-    margin-bottom: -12px;
-    transition: var(--tooltip-transition);
-}
-
-[data-tooltip]:hover:before,
-[data-tooltip]:focus:before,
-[data-tooltip]:hover:after,
-[data-tooltip]:focus:after {
+[data-tooltip].tooltip-active .tooltip-content,
+[data-tooltip].tooltip-active .tooltip-arrow {
     opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
     margin-bottom: 5px;
 }
+/*endregion*/
 
+/*region Utilities*/
 /* ==========================================================================
    Utilities
    ========================================================================== */
@@ -1021,23 +1140,27 @@ table .notice-text td p {
 }
 
 .help-badge {
-    color: var(--color-shopware-brand-500);
+    color: var(--color-text);
     font-size: 16px;
     display: inline-block;
     margin: 0 5px;
 }
 
-.help-block {
-    color: var(--color-gray-500);
+.help-container {
+    color: var(--color-text);
     padding: 0 0 12px;
-    font-size: 13px;
+    font-size: var(--font-size-2xs);
 }
+/*endregion*/
 
+/*region Installer steps*/
 /* ==========================================================================
    Installer steps
    ========================================================================== */
 
-/* Step: Start / Language selection
+/*region Step: Start / Language selection*/
+/* ==========================================================================
+   Step: Start / Language selection
    ========================================================================== */
 
 .welcome-illustration {
@@ -1067,8 +1190,11 @@ table .notice-text td p {
     color: var(--color-shopware-brand-500);
     text-decoration: underline;
 }
+/*endregion*/
 
-/* Step: System requirements
+/*region Step: System requirements*/
+/* ==========================================================================
+   Step: System requirements
    ========================================================================== */
 
 .requirement-group {
@@ -1127,8 +1253,11 @@ table .notice-text td p {
 .status-indicator.warning {
     background-color: var(--color-pumpkin-spice-500);
 }
+/*endregion*/
 
-/* Step: Terms of service
+/*region Step: Terms of service*/
+/* ==========================================================================
+   Step: Terms of service
    ========================================================================== */
 
 .license-agreement {
@@ -1141,8 +1270,11 @@ table .notice-text td p {
     overflow-y: scroll;
     margin-bottom: 20px;
 }
+/*endregion*/
 
-/* Step: Database import / migration
+/*region Step: Database import / migration*/
+/* ==========================================================================
+   Step: Database import / migration
    ========================================================================== */
 
 .database-hint {
@@ -1183,8 +1315,11 @@ table .notice-text td p {
 .database-import-count {
     margin-bottom: 8px;
 }
+/*endregion*/
 
-/* Step: Cleanup
+/*region Step: Cleanup*/
+/* ==========================================================================
+   Step: Cleanup
    ========================================================================== */
 
 .clearCacheSpinner {
@@ -1204,3 +1339,6 @@ table .notice-text td p {
 .error-message-container {
     display: none;
 }
+/*endregion*/
+
+/*endregion*/

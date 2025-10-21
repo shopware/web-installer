@@ -1,5 +1,6 @@
 shopware.update:
     header_title: Instalación
+    continue: Continuar
     back: Volver
     rc_hint: (No recomendado para producción)
     language:
@@ -17,24 +18,28 @@ shopware.update:
         da: Dansk
         no: Norsk
     navigation:
-        start: Idioma
-        configure_php: Configuración
+        start: Inicio
+        configure_php: &configure_php_title Archivo binario PHP
         download: Descarga
-        finish: Finalizar
+        requirements: Requisitos del sistema
+        license: CGV
+        database-configuration: Configuración de la base de datos
+        database-import: Instalación
+        configuration: Configuración de la tienda
+        finish: Terminado
     steps:
         start:
             title: Instalador de Shopware
-            welcomeTitle: Bienvenido al Instalador de Shopware
-            welcomeMessage: Este proceso le guiará a través de los pasos necesarios para instalar o actualizar Shopware 6.
+            welcomeTitle: Bienvenido a Shopware 6
+            welcomeMessage: >
+              ¡Estamos encantados de que se una a nuestra comunidad global de Shopware! Este instalador le guiará a
+              través de cada paso necesario para instalar Shopware 6 sin problemas.
             languageSelection: Idioma del instalador
-            languageSelectionInfo: El idioma seleccionado aquí solo se aplica a este instalador. Podrá elegir otro idioma para su tienda más adelante.
-            submit: Continuar
 
         configure_php:
-            title: Configuración
+            title: *configure_php_title
             info: Binario de PHP encontrado. Si desea seleccionar el archivo manualmente, puede especificarlo aquí.
             pathInput: Binario de PHP
-            submit: Guardar configuración
 
         update:
             title: Actualizando Shopware
@@ -62,3 +67,11 @@ shopware.update:
             installation_failed: Descarga fallida
             submit: Descargar
             error: 'No se pudo descargar Shopware. Puede acceder al archivo de registro <a href="#" id="download-log">aquí</a>.'
+
+    help:
+      title: ¿Necesita ayuda?
+      support_channel: Elija el canal de asistencia que más le convenga
+      forum: Foro
+      phone_number_call: +492555928850
+      phone_number_formatted: (+49) 2555 928850
+      email: Correo electrónico

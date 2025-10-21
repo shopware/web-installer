@@ -1,5 +1,6 @@
 shopware.update:
     header_title: Installation
+    continue: Weiter
     back: Zurück
     rc_hint: (Nicht für die Produktivumgebung empfohlen)
     language:
@@ -17,24 +18,30 @@ shopware.update:
         da: Dansk
         no: Norsk
     navigation:
-        start: Sprache
-        configure_php: Konfigurieren
+        start: Start
+        configure_php: &configure_php_title PHP-Binärdatei
         download: Herunterladen
-        finish: Abschluss
+        requirements: Systemvoraussetzungen
+        license: AGB
+        database-configuration: Datenbank-Konfiguration
+        database-import: Installation
+        configuration: Shop-Konfiguration
+        finish: Fertig
+
     steps:
         start:
             title: Shopware-Installer
-            welcomeTitle: Willkommen im Shopware-Installer
-            welcomeMessage: Dieser Prozess wird Dich bei den notwendigen Schritten zum Installieren oder Aktualisieren von Shopware 6 begleiten.
+            welcomeTitle: Willkommen zu Shopware 6
+            welcomeMessage: >
+              Wir freuen uns, dass Sie Teil unserer globalen Shopware-Community werden! Dieser Installer führt Sie
+              durch alle Schritte, die für eine reibungslose Installation von Shopware 6 erforderlich sind.
             languageSelection: Sprache des Installers
-            languageSelectionInfo: Die hier ausgewählte Sprache gilt nur für den Installer. Du kannst später immer noch eine andere Sprache für Deinen Shop auswählen.
-            submit: Weiter
 
         configure_php:
-            title: Konfigurieren
+            title: *configure_php_title
             info: PHP-Ausführungsdatei gefunden. Falls Du die Datei selber aussuchen möchtest, kannst Du das hier tun.
             pathInput: PHP-Ausführungsdatei
-            submit: Konfiguration speichern
+
         update:
             title: Aktualisiere Shopware
             log: Protokoll
@@ -43,6 +50,7 @@ shopware.update:
             currentVersion: 'Installierte Version: %version%'
             updateVersion: 'Neue Version:'
             error: 'Shopware konnte nicht aktualisiert werden. Klicke <a href="#" id="download-log">hier</a> um zur Protokolldatei zu gelangen.'
+
         finish:
             title: Abschluss
             message: |
@@ -50,6 +58,7 @@ shopware.update:
 
                 Im nächsten Schritt werden die Installationsdateien vom Server gelöscht und Du wirst zur Administration weitergeleitet.
             submit: Administration öffnen
+
         install:
             title: Shopware herunterladen
             info: Wähle eine Shopware-Version aus. Die Software wird in das aktuelle Verzeichnis installiert.
@@ -59,3 +68,11 @@ shopware.update:
             installation_failed: Herunterladen fehlgeschlagen
             submit: Herunterladen
             error: 'Shopware konnte nicht heruntergeladen werden. Klicke <a href="#" id="download-log">hier</a> um zur Protokolldatei zu gelangen.'
+
+    help:
+      title: Benötigen Sie Hilfe?
+      support_channel: Wählen Sie den Supportkanal, der Ihnen am besten zusagt
+      forum: Forum
+      phone_number_call: +492555928850
+      phone_number_formatted: (+49) 2555 928850
+      email: E-Mail

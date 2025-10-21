@@ -1,5 +1,6 @@
 shopware.update:
     header_title: Installation
+    continue: Fortsätt
     back: Tillbaka
     rc_hint: (Rekommenderas inte i produktion)
     language:
@@ -17,30 +18,30 @@ shopware.update:
         da: Dansk
         no: Norsk
     navigation:
-        start: Språk
-        configure_php: Konfiguration
+        start: Start
+        configure_php: &configure_php_title PHP-binärfil
         download: Ladda ned
-        finish: Avsluta
+        requirements: Systemkrav
+        license: Allmänna affärsvillkor
+        database-configuration: Databaskonfiguration
+        database-import: Installation
+        configuration: Butikskonfiguration
+        finish: Klar
     steps:
         start:
             title: Shopware-installatör
-            welcomeTitle: Välkommen till Shopware-installatören
+            welcomeTitle: Välkommen till Shopware 6
             welcomeMessage: >
-                Denna process kommer att vägleda dig genom de steg som krävs
-                för att installera eller uppdatera Shopware 6.
+              Vi är glada att du ansluter dig till vår globala Shopware-community! Denna installationsguide leder dig
+              genom alla steg som krävs för att installera Shopware 6 smidigt.
             languageSelection: Installatörsspråk
-            languageSelectionInfo: >
-                Språket som väljs här gäller endast för denna installatör.
-                Du kan välja ett annat språk för din butik senare.
-            submit: Fortsätt
 
         configure_php:
-            title: Konfiguration
+            title: *configure_php_title
             info: >
                 PHP-binär hittad.
                 Om du vill välja filen själv kan du ange den här.
             pathInput: PHP-binär
-            submit: Spara konfiguration
 
         update:
             title: Uppdaterar Shopware
@@ -76,3 +77,11 @@ shopware.update:
             error: >
                 Shopware kunde inte laddas ned.
                 Du kan öppna loggfilen <a href="#" id="download-log">här</a>.
+
+    help:
+      title: Behöver du hjälp?
+      support_channel: Välj den supportkanal som passar dig bäst
+      forum: Forum
+      phone_number_call: +492555928850
+      phone_number_formatted: (+49) 2555 928850
+      email: E-post

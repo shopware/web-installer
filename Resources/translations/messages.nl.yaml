@@ -1,5 +1,6 @@
 shopware.update:
     header_title: Installatie
+    continue: Doorgaan
     back: Terug
     rc_hint: (Niet aanbevolen voor productie)
     language:
@@ -17,30 +18,30 @@ shopware.update:
         da: Dansk
         no: Norsk
     navigation:
-        start: Taal
-        configure_php: Configuratie
-        download: Download
-        finish: Voltooien
+        start: Start
+        configure_php: &configure_php_title PHP-binair bestand
+        download: Downloaden
+        requirements: Systeemvereisten
+        license: Algemene voorwaarden
+        database-configuration: Databaseconfiguratie
+        database-import: Installatie
+        configuration: Winkelconfiguratie
+        finish: Gereed
     steps:
         start:
             title: Shopware-installatie
-            welcomeTitle: Welkom bij de Shopware-installatie
+            welcomeTitle: Welkom bij Shopware 6
             welcomeMessage: >
-                Dit proces begeleidt je door de stappen die nodig zijn
-                om Shopware 6 te installeren of bij te werken.
+              We zijn verheugd dat u zich aansluit bij onze wereldwijde Shopware-community! Deze installatieprogramma 
+              begeleidt u bij elke stap die nodig is om Shopware 6 soepel te installeren.
             languageSelection: Installatietaal
-            languageSelectionInfo: >
-                De hier gekozen taal geldt alleen voor deze installatie.
-                Je kunt later een andere taal voor je shop kiezen.
-            submit: Doorgaan
 
         configure_php:
-            title: Configuratie
+            title: *configure_php_title
             info: >
                 PHP-binaire gevonden.
                 Als je zelf een bestand wilt selecteren, kun je dat hier opgeven.
             pathInput: PHP-binaire
-            submit: Configuratie opslaan
 
         update:
             title: Shopware bijwerken
@@ -77,3 +78,11 @@ shopware.update:
             error: >
                 Shopware kon niet worden gedownload.
                 Je kunt het logbestand <a href="#" id="download-log">hier</a> openen.
+
+    help:
+      title: Hulp nodig?
+      support_channel: Kies het ondersteuningskanaal dat bij u past
+      forum: Forum
+      phone_number_call: +492555928850
+      phone_number_formatted: (+49) 2555 928850
+      email: E-mail

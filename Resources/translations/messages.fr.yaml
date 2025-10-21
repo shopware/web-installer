@@ -1,5 +1,6 @@
 shopware.update:
     header_title: Installation
+    continue: Continuer
     back: Retour
     rc_hint: (Non recommandé en production)
     language:
@@ -17,30 +18,31 @@ shopware.update:
         da: Dansk
         no: Norsk
     navigation:
-        start: Langue
-        configure_php: Configuration
+        start: Démarrer
+        configure_php: &configure_php_title Fichier binaire PHP
         download: Téléchargement
-        finish: Terminer
+        requirements: Conditions du système
+        license: CGV
+        database-configuration: Configuration de la base de données
+        database-import: Installation
+        configuration: Configuration de la boutique
+        finish: Terminé
     steps:
         start:
             title: Installateur Shopware
-            welcomeTitle: Bienvenue dans l’installateur Shopware
+            welcomeTitle: Bienvenue dans Shopware 6
             welcomeMessage: >
-                Ce processus vous guidera à travers les étapes nécessaires
-                pour installer ou mettre à jour Shopware 6.
+              Nous sommes ravis que vous rejoigniez notre communauté Shopware internationale ! Ce programme
+              d'installation vous guidera à travers chaque étape nécessaire pour installer Shopware 6 en toute
+              simplicité.
             languageSelection: Langue de l’installateur
-            languageSelectionInfo: >
-                La langue choisie ici s’applique uniquement à cet installateur.
-                Vous pourrez sélectionner une autre langue pour votre boutique ultérieurement.
-            submit: Continuer
 
         configure_php:
-            title: Configuration
+            title: *configure_php_title
             info: >
                 Exécutable PHP trouvé.
                 Si vous souhaitez sélectionner le fichier vous-même, vous pouvez le spécifier ici.
             pathInput: Binaire PHP
-            submit: Enregistrer la configuration
 
         update:
             title: Mise à jour de Shopware
@@ -77,3 +79,11 @@ shopware.update:
             error: >
                 Impossible de télécharger Shopware.
                 Vous pouvez accéder au fichier journal <a href="#" id="download-log">ici</a>.
+
+    help:
+      title: Besoin d'aide ?
+      support_channel: Choisissez le canal d'assistance qui vous convient
+      forum: Forum
+      phone_number_call: +492555928850
+      phone_number_formatted: (+49) 2555 928850
+      email: E-mail

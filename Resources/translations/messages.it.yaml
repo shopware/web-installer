@@ -1,5 +1,6 @@
 shopware.update:
     header_title: Installazione
+    continue: Continua
     back: Indietro
     rc_hint: (Non consigliato in produzione)
     language:
@@ -17,30 +18,31 @@ shopware.update:
         da: Dansk
         no: Norsk
     navigation:
-        start: Lingua
-        configure_php: Configurazione
+        start: Avvia
+        configure_php: &configure_php_title File binario PHP
         download: Download
+        requirements: Requisiti di sistema
+        license: CGV
+        database-configuration: Configurazione del database
+        database-import: Installazione
+        configuration: Configurazione del negozio
         finish: Fine
     steps:
         start:
             title: Installatore di Shopware
-            welcomeTitle: Benvenuto nell’installatore di Shopware
+            welcomeTitle: Benvenuto in Shopware 6
             welcomeMessage: >
-                Questo processo ti guiderà attraverso i passaggi necessari
-                per installare o aggiornare Shopware 6.
+              Siamo lieti che tu abbia deciso di entrare a far parte della nostra comunità globale Shopware! Questo
+              programma di installazione ti guiderà attraverso tutti i passaggi necessari per installare Shopware 6 
+              senza problemi.
             languageSelection: Lingua dell’installatore
-            languageSelectionInfo: >
-                La lingua selezionata vale solo per questo installatore.
-                Potrai scegliere un’altra lingua per il tuo shop in seguito.
-            submit: Continua
 
         configure_php:
-            title: Configurazione
+            title: *configure_php_title
             info: >
                 Eseguibile PHP trovato.
                 Se desideri selezionare manualmente il file, puoi specificarlo qui.
             pathInput: Eseguibile PHP
-            submit: Salva configurazione
 
         update:
             title: Aggiornamento di Shopware
@@ -77,3 +79,11 @@ shopware.update:
             error: >
                 Impossibile scaricare Shopware.
                 Puoi accedere al file di registro <a href="#" id="download-log">qui</a>.
+
+    help:
+      title: Hai bisogno di aiuto?
+      support_channel: Scegli il canale di assistenza che preferisci
+      forum: Forum
+      phone_number_call: +492555928850
+      phone_number_formatted: (+49) 2555 928850
+      email: E-mail
