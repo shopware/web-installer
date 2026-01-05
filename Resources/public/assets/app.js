@@ -110,6 +110,7 @@ if (updateButton) {
         try {
             await tailLog(updateRun, logOutput);
         } catch (e) {
+             console.log(e);
             return showLog();
         }
 
@@ -122,6 +123,7 @@ if (updateButton) {
             try {
                 await tailLog(resetConfig, logOutput);
             } catch (e) {
+                console.log(e);
                 return showLog();
             }
         }
@@ -134,6 +136,7 @@ if (updateButton) {
             try {
                 await tailLog(finishUpdate, logOutput);
             } catch (e) {
+                console.log(e);
                 return showLog();
             }
         }
