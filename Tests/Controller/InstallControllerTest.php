@@ -70,6 +70,7 @@ class InstallControllerTest extends TestCase
                 $tmpDir,
                 '--no-interaction',
                 '--no-ansi',
+                '--no-security-blocking',
                 '-v',
             ])
             ->willReturn(new StreamedResponse());

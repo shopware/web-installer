@@ -90,6 +90,7 @@ class InstallController extends AbstractController
             $folder,
             '--no-interaction',
             '--no-ansi',
+            '--no-security-blocking',
             '-v',
         ], $finish);
     }

@@ -99,6 +99,7 @@ class UpdateController extends AbstractController
             $shopwarePath,
             '--no-interaction',
             '--no-ansi',
+            '--no-security-blocking',
             '--no-scripts',
             '-v',
             '--with-all-dependencies', // update all packages
