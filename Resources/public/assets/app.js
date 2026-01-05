@@ -2,32 +2,46 @@ const decoder = new TextDecoder();
 
 async function tailLog(response, element) {
     const reader = response.body.getReader();
+    let buffer = '';
 
     while (true) {
         const {value, done} = await reader.read();
-        if (done) break;
 
-        const text = decoder.decode(value);
-
-        let result = null
-
-        try {
-            let strings = text.split("\n");
-            result = JSON.parse(strings.pop());
-
-            element.innerHTML += strings.join("\n") + "\n";
-            element.scrollTop = element.scrollHeight;
-        } catch (e) {
-            element.innerHTML += text;
-            element.scrollTop = element.scrollHeight;
+        if (done) {
+            if (buffer.trim()) {
+                try {
+                    const result = JSON.parse(buffer);
+                    if (!result.success) {
+                        throw new Error('update failed');
+                    }
+                    return result;
+                } catch {
+                    element.innerHTML += `${buffer}\n`;
+                    element.scrollTop = element.scrollHeight;
+                }
+            }
+            break;
         }
 
-        if (result) {
-            if (!result.success) {
-                throw new Error('update failed');
-            }
+        const text = decoder.decode(value);
+        buffer += text;
 
-            return result
+        const lines = buffer.split("\n");
+        buffer = lines.pop();
+
+        for (const line of lines) {
+            if (line.trim() === '') continue;
+
+            try {
+                const result = JSON.parse(line);
+                if (!result.success) {
+                    throw new Error('update failed');
+                }
+                return result;
+            } catch {
+                element.innerHTML += `${line}\n`;
+                element.scrollTop = element.scrollHeight;
+            }
         }
     }
 
@@ -87,6 +101,7 @@ if (updateButton) {
             try {
                 await tailLog(prepareUpdate, logOutput);
             } catch (e) {
+                console.log(e);
                 return showLog();
             }
         }
