@@ -447,6 +447,7 @@ class UpdateControllerTest extends TestCase
                 'symfony:recipes:install',
                 '--force',
                 '--reset',
+                '--yes',
                 '--no-interaction',
                 '--no-ansi',
                 '-v',
