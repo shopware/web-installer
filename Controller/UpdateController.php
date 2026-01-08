@@ -130,6 +130,7 @@ class UpdateController extends AbstractController
             'symfony:recipes:install',
             '--force',
             '--reset',
+            '--yes',
             '--no-interaction',
             '--no-ansi',
             '-v',
