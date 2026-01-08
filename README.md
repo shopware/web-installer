@@ -88,6 +88,23 @@ you have to use that version for the next version variable.
 Then run the updater regularly with `php shopware-installer.phar.php`,
 it will use the forced version and don't try to determine a version anymore.
 
+## Releasing
+
+To create a new release, push a tag to the repository:
+
+```bash
+git tag 1.0.0
+git push origin 1.0.0
+```
+
+The GitHub Actions workflow will automatically build the PHAR file, generate a build provenance attestation, and upload it to the release.
+
+You can verify the attestation of a downloaded release using the GitHub CLI:
+
+```bash
+gh attestation verify shopware-installer.phar.php --repo shopware/web-installer
+```
+
 ### Configurable Installer Timeout
 
 The installer timeout can be configured using the `SHOPWARE_INSTALLER_TIMEOUT` environment variable (in seconds). 
