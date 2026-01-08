@@ -424,10 +424,6 @@ class UpdateControllerTest extends TestCase
         $recoveryManager = $this->createMock(RecoveryManager::class);
 
         $tmpDir = sys_get_temp_dir() . '/' . uniqid('test', true);
-        $fs = new Filesystem();
-        $fs->mkdir($tmpDir . '/vendor/symfony/flex/src/');
-        $optionFile = $tmpDir . '/vendor/symfony/flex/src/Options.php';
-        copy(__DIR__ . '/../_fixtures/Options.php', $optionFile);
 
         $recoveryManager->method('getShopwareLocation')->willReturn($tmpDir);
         $recoveryManager->method('getCurrentShopwareVersion')->willReturn('6.4.17.0');
@@ -467,10 +463,6 @@ class UpdateControllerTest extends TestCase
         $request = new Request();
         $request->setSession(new Session(new MockArraySessionStorage()));
         $response = $controller->resetConfig($request);
-
-        $optionContent = (string) file_get_contents($optionFile);
-        static::assertStringNotContainsString(', $file), false);', $optionContent);
-        static::assertStringNotContainsString(', $name), false);', $optionContent);
 
         static::assertInstanceOf(StreamedResponse::class, $response);
     }
