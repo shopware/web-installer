@@ -39,19 +39,21 @@ class InstallerLocaleListener
         $session = $request->getSession();
 
         // language is changed
-        if ($request->query->has('language') && \in_array((string) $request->query->get('language'), $this->installerLanguages, true)) {
-            $session->set('language', (string) $request->query->get('language'));
+        $language = $request->query->getString('language');
+        if ($language !== '' && \in_array($language, $this->installerLanguages, true)) {
+            $session->set('language', $language);
 
-            return (string) $request->query->get('language');
+            return $language;
         }
 
         // language was already set
-        if ($session->has('language') && \in_array((string) $session->get('language'), $this->installerLanguages, true)) {
-            return (string) $session->get('language');
+        $sessionLanguage = (string) $session->get('language');
+        if ($sessionLanguage !== '' && \in_array($sessionLanguage, $this->installerLanguages, true)) {
+            return $sessionLanguage;
         }
 
         $mappedLanguages = array_map(
-            fn(string $l): string => str_replace('-', '_', $l),
+            static fn(string $l): string => str_replace('-', '_', $l),
             $this->installerLanguages
         );
 

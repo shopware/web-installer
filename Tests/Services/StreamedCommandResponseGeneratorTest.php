@@ -17,9 +17,7 @@ class StreamedCommandResponseGeneratorTest extends TestCase
 {
     public function testRun(): void
     {
-        $generator = new StreamedCommandResponseGenerator();
-
-        $response = $generator->run(['echo', 'foo'], function (Process $process): void {
+        $response = (new StreamedCommandResponseGenerator())->run(['echo', 'foo'], function (Process $process): void {
             static::assertTrue($process->isSuccessful());
         });
 
@@ -33,9 +31,7 @@ class StreamedCommandResponseGeneratorTest extends TestCase
 
     public function testRunJSON(): void
     {
-        $generator = new StreamedCommandResponseGenerator();
-
-        $response = $generator->runJSON(['echo', 'foo']);
+        $response = (new StreamedCommandResponseGenerator())->runJSON(['echo', 'foo']);
 
         ob_start();
         $response->sendContent();
@@ -62,7 +58,7 @@ class StreamedCommandResponseGeneratorTest extends TestCase
         ob_end_clean();
 
         static::assertNotNull($theFinishedProcess);
-        static::assertSame((float) $customTimeout, $theFinishedProcess->getTimeout());
+        static::assertSame($customTimeout, $theFinishedProcess->getTimeout());
 
         // Cleanup
         putenv('SHOPWARE_INSTALLER_TIMEOUT');

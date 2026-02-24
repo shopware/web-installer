@@ -63,7 +63,7 @@ class StreamedCommandResponseGenerator
 
             echo json_encode([
                 'success' => $process->isSuccessful(),
-            ]);
+            ], JSON_THROW_ON_ERROR);
         });
     }
 }

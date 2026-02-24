@@ -300,7 +300,7 @@ class ProjectComposerJsonUpdaterTest extends TestCase
                 'symlink' => true,
             ],
         ];
-        $_SERVER['SW_RECOVERY_REPOSITORY'] = json_encode($customRepo);
+        $_SERVER['SW_RECOVERY_REPOSITORY'] = json_encode($customRepo, JSON_THROW_ON_ERROR);
 
         (new ProjectComposerJsonUpdater(new MockHttpClient([$this->getEmptyVersionsResponse()])))->update(
             $this->json,

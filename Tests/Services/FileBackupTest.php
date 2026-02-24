@@ -19,7 +19,7 @@ class FileBackupTest extends TestCase
 
     protected function setUp(): void
     {
-        $file = tempnam(sys_get_temp_dir(), static::name());
+        $file = tempnam(sys_get_temp_dir(), $this->name());
 
         if ($file === false) {
             static::fail('Cannot create temporary file');

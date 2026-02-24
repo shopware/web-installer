@@ -26,7 +26,7 @@ class ProjectComposerJsonUpdater
         ];
 
         /** @var array{minimum-stability?: string, require: array<string, string>} $composerJson */
-        $composerJson = json_decode((string) file_get_contents($file), true, \JSON_THROW_ON_ERROR);
+        $composerJson = json_decode((string) file_get_contents($file), true, flags: \JSON_THROW_ON_ERROR);
 
         if (str_contains(strtolower($latestVersion), 'rc')) {
             $composerJson['minimum-stability'] = 'RC';
@@ -91,7 +91,7 @@ class ProjectComposerJsonUpdater
         if (\is_string($repoString)) {
             try {
                 $repo = json_decode($repoString, true, 512, \JSON_THROW_ON_ERROR);
-            } catch (\JsonException $e) {
+            } catch (\JsonException) {
                 return $config;
             }
 
@@ -104,7 +104,7 @@ class ProjectComposerJsonUpdater
     private function getConflictMinVersion(string $shopwareVersion): ?string
     {
         /**
-         * Since Shopware 6.6.10.1, we pin the conflicts version in Shopware to an excact version.
+         * Since Shopware 6.6.10.1, we pin the conflicts version in Shopware to an exact version.
          * So this does not make sense anymore
          * @see https://github.com/shopware/conflicts/blob/main/USAGES.md
          */

@@ -26,8 +26,7 @@ class LanguageProviderTest extends TestCase
                 'de'    => ['id' => 'de-DE', 'label' => 'Deutsch'],
             ]);
 
-        $provider = new LanguageProvider($params);
-        $languages = $provider->getSupportedLanguages();
+        $languages = (new LanguageProvider($params))->getSupportedLanguages();
 
         // Verify the sorting
         static::assertIsArray($languages);
@@ -47,8 +46,7 @@ class LanguageProviderTest extends TestCase
         static::assertInstanceOf(Container::class, $container);
         $parameterBag = $container->getParameterBag();
 
-        $provider = new LanguageProvider($parameterBag);
-        $languages = $provider->getSupportedLanguages();
+        $languages = (new LanguageProvider($parameterBag))->getSupportedLanguages();
 
         static::assertIsArray($languages);
         static::assertNotEmpty($languages);

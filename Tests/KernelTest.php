@@ -26,9 +26,7 @@ class KernelTest extends TestCase
 
     public function testBundles(): void
     {
-        $kernel = new Kernel('test', true);
-
-        $bundles = $kernel->registerBundles();
+        $bundles = (new Kernel('test', true))->registerBundles();
 
         static::assertCount(2, $bundles);
         static::assertInstanceOf(FrameworkBundle::class, $bundles[0]);

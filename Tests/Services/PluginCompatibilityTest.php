@@ -44,10 +44,7 @@ class PluginCompatibilityTest extends TestCase
 
     public function testIncompatibleCustomComposerPluginIsRemovedFromProject(): void
     {
-        $this->projectDeps([
-            'shopware/commercial' => '5.8.7',
-            'shopware/core' => '~v6.5.0',
-        ]);
+        $this->projectDeps();
 
         $this->pluginRequires([
             'shopware/core' => '~v6.5.8',
@@ -68,10 +65,7 @@ class PluginCompatibilityTest extends TestCase
 
     public function testCompatibleCustomComposerPluginIsNotRemovedFromProject(): void
     {
-        $this->projectDeps([
-            'shopware/commercial' => '5.8.7',
-            'shopware/core' => '~v6.5.0',
-        ]);
+        $this->projectDeps();
 
         $this->pluginRequires([
             'shopware/core' => '~v6.5.8 || ^6.6',
@@ -94,12 +88,14 @@ class PluginCompatibilityTest extends TestCase
     }
 
     /**
-     * @param array<string, string> $deps
      */
-    private function projectDeps(array $deps): void
+    private function projectDeps(): void
     {
         file_put_contents($this->json, json_encode([
-            'require' => $deps,
+            'require' => [
+                'shopware/commercial' => '5.8.7',
+                'shopware/core' => '~v6.5.0',
+            ],
         ], \JSON_THROW_ON_ERROR));
     }
 
@@ -112,7 +108,7 @@ class PluginCompatibilityTest extends TestCase
             'packages' => [
                 'shopware/commercial' => [
                     'name' => 'shopware/commercial',
-                    'type' => 'shopware-platform-plugin',
+                    'type' => PluginCompatibility::COMPOSER_TYPE_PLUGIN,
                     'install-path' => '../shopware/commercial',
                     'require' => $requires,
                 ],

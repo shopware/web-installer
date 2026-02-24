@@ -39,7 +39,7 @@ return static function (array &$context) {
         $_SERVER['DATABASE_URL'] = 'mysql://_placeholder.test';
     }
 
-    if (method_exists(KernelFactory::class, "create")) {
+    if (method_exists(KernelFactory::class, 'create')) {
         $kernel = KernelFactory::create(
             environment: $env,
             debug: $debug,

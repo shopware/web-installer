@@ -106,7 +106,7 @@ class InstallControllerTest extends TestCase
         $output = ob_get_clean();
         static::assertIsString($output);
 
-        $data = json_decode($output, true);
+        $data = json_decode($output, true, flags: JSON_THROW_ON_ERROR);
         static::assertIsArray($data);
         static::assertArrayHasKey('success', $data);
         static::assertTrue($data['success']);
@@ -136,7 +136,7 @@ class InstallControllerTest extends TestCase
         $output = ob_get_clean();
         static::assertIsString($output);
 
-        $data = json_decode($output, true);
+        $data = json_decode($output, true, flags: JSON_THROW_ON_ERROR);
         static::assertIsArray($data);
         static::assertArrayHasKey('success', $data);
         static::assertFalse($data['success']);
