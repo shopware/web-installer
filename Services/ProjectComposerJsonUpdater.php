@@ -56,6 +56,12 @@ class ProjectComposerJsonUpdater
             $composerJson['require'][$shopwarePackage] = $version;
         }
 
+        if (isset($composerJson['require']['shopware/commercial'])) {
+            // If commercial is installed, also update it directly as part of the core update to keep them in sync
+            // Remove leading "(v)6." from Shopware version to match commercial release versions
+            $composerJson['require']['shopware/commercial'] = substr($version, strpos($version, '.') + 1);
+        }
+
         $composerJson = $this->configureRepositories($composerJson);
 
         file_put_contents($file, json_encode($composerJson, \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
