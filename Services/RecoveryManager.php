@@ -47,9 +47,9 @@ class RecoveryManager
             throw InstallerException::cannotFindShopwareInstallation();
         }
 
-        if (file_exists($composerLookup)) {
+        if (is_file($composerLookup)) {
             /** @var array{packages: array{name: string, version: string}[]} $composerJson */
-            $composerJson = json_decode((string) file_get_contents($composerLookup), true, \JSON_THROW_ON_ERROR);
+            $composerJson = json_decode((string) file_get_contents($composerLookup), true, flags: \JSON_THROW_ON_ERROR);
 
             foreach ($composerJson['packages'] as $package) {
                 if ($package['name'] === 'shopware/core' || $package['name'] === 'shopware/platform') {
@@ -65,12 +65,12 @@ class RecoveryManager
     {
         $lockFile = $shopwarePath . '/composer.lock';
 
-        if (!file_exists($lockFile)) {
+        if (!is_file($lockFile)) {
             throw InstallerException::cannotFindComposerLock();
         }
 
         /** @var array{packages: array{name: string, version: string}[]} $composerLock */
-        $composerLock = json_decode((string) file_get_contents($lockFile), true, \JSON_THROW_ON_ERROR);
+        $composerLock = json_decode((string) file_get_contents($lockFile), true, flags: \JSON_THROW_ON_ERROR);
 
         foreach ($composerLock['packages'] as $package) {
             if ($package['name'] === 'shopware/core' || $package['name'] === 'shopware/platform') {

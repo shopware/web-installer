@@ -30,9 +30,7 @@ class ReleaseInfoProviderTest extends TestCase
             ], \JSON_THROW_ON_ERROR)),
         ]);
 
-        $releaseInfoProvider = new ReleaseInfoProvider($mockClient);
-
-        $releaseInfo = $releaseInfoProvider->fetchUpdateVersions('6.4.0.0');
+        $releaseInfo = (new ReleaseInfoProvider($mockClient))->fetchUpdateVersions('6.4.0.0');
 
         static::assertSame(
             [

@@ -43,11 +43,11 @@ return static function (array &$context) {
     if (trim($context['DATABASE_URL'] ?? '') === '') {
         // fake DATABASE_URL
         $_SERVER['DATABASE_URL'] = 'mysql://_placeholder.test';
-    } else if (!isset($context['INSTALL'])) {
-        $pluginLoader = new DbalKernelPluginLoader($classLoader, null, \Shopware\Core\Kernel::getConnection());
+    } elseif (!isset($context['INSTALL'])) {
+        $pluginLoader = new DbalKernelPluginLoader($classLoader, null, Kernel::getConnection());
     }
 
-    if (method_exists(KernelFactory::class, "create")) {
+    if (method_exists(KernelFactory::class, 'create')) {
         $kernel = KernelFactory::create(
             environment: $env,
             debug: $debug,

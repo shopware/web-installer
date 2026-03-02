@@ -7,17 +7,19 @@ namespace Shopware\WebInstaller\Services;
 use Composer\Semver\Semver;
 
 /**
- * Any plugins which  execute composer commands @see \Shopware\Commercial\SwagCommercial::executeComposerCommands
+ * Any plugins which execute composer commands (see `\Shopware\Core\Framework\Plugin::executeComposerCommands` https://github.com/shopware/shopware/blob/trunk/src/Core/Framework/Plugin.php )
  * must be removed from the project `composer.json` file when their shopware dependency constraint is not valid with the updated Shopware version.
  *
  * Eg: Shopware is being updated to 6.6. Plugin `shopware/commercial` depends on `shopware/core` with a constraint like "^6.5".
- * It must be removed from the project in order for it to be updated, otherwise `composer update` will fail. The plugin will be added back
- * to the project's `composer.json` when it is updated again.
+ * It must be removed from the project in order for it to be updated, otherwise `composer update` will fail.
+ * The plugin will be added back to the project's `composer.json` when it is updated again.
  *
  * @internal
  */
 class PluginCompatibility
 {
+    public const COMPOSER_TYPE_PLUGIN = 'shopware-platform-plugin';
+
     private const SHOPWARE_PACKAGES = [
         'shopware/core',
         'shopware/administration',
@@ -31,25 +33,25 @@ class PluginCompatibility
     private array $installedPackages = [];
 
     public function __construct(
-        private string $projectComposerJsonFile,
-        private string $shopwareUpgradeVersion,
+        private readonly string $projectComposerJsonFile,
+        private readonly string $shopwareUpgradeVersion,
     ) {
         $installedJsonLocation = \sprintf(
             '%s/vendor/composer/installed.json',
             \dirname((string) realpath($this->projectComposerJsonFile))
         );
 
-        if (!file_exists($installedJsonLocation)) {
+        if (!is_file($installedJsonLocation)) {
             return;
         }
 
         /**
-         * array{packages: array<array{name: string, require: array<string, string>}>}
+         * @var array{packages: array<array{name: string, require: array<string, string>}>} $installedJson
          */
         $installedJson = json_decode(
             (string) file_get_contents($installedJsonLocation),
             true,
-            \JSON_THROW_ON_ERROR
+            flags: \JSON_THROW_ON_ERROR
         );
 
         $this->installedPackages = array_combine(
@@ -60,7 +62,7 @@ class PluginCompatibility
 
     public function removeIncompatible(): void
     {
-        $shopwarePlugins = $this->getInstalledPackagesByType('shopware-platform-plugin');
+        $shopwarePlugins = $this->getInstalledPackagesOfTypeShopwarePlatformPlugin();
 
         // we only care about plugins directly in `custom/plugins` because plugins directly
         // managed by composer should be updated correctly, if a compatible version is available
@@ -88,7 +90,7 @@ class PluginCompatibility
         }
 
         /** @var array{require: array<string, string>} $composerJson */
-        $composerJson = json_decode((string) file_get_contents($this->projectComposerJsonFile), true, \JSON_THROW_ON_ERROR);
+        $composerJson = json_decode((string) file_get_contents($this->projectComposerJsonFile), true, flags: \JSON_THROW_ON_ERROR);
 
         foreach ($nonCompatible as $plugin) {
             if (isset($composerJson['require'][$plugin])) {
@@ -102,12 +104,12 @@ class PluginCompatibility
     /**
      * @return array<string>
      */
-    private function getInstalledPackagesByType(string $type): array
+    private function getInstalledPackagesOfTypeShopwarePlatformPlugin(): array
     {
         $packagesByType = [];
 
         foreach ($this->installedPackages as $package) {
-            if (isset($package['type']) && $package['type'] === $type) {
+            if (isset($package['type']) && $package['type'] === self::COMPOSER_TYPE_PLUGIN) {
                 $packagesByType[] = $package['name'];
             }
         }
@@ -141,18 +143,14 @@ class PluginCompatibility
 
     private function isPluginCompatible(string $plugin, string $shopwareVersion): bool
     {
-        $pluginCompatible = true;
-
         foreach ($this->getRequires($plugin) as $packageDep => $constraint) {
-            if (\in_array($packageDep, self::SHOPWARE_PACKAGES, true)) {
-                $satisfies = Semver::satisfies($shopwareVersion, $constraint);
-
-                if (!$satisfies) {
-                    $pluginCompatible = false;
-                }
+            if (\in_array($packageDep, self::SHOPWARE_PACKAGES, true)
+                && Semver::satisfies($shopwareVersion, $constraint) === false
+            ) {
+                return false;
             }
         }
 
-        return $pluginCompatible;
+        return true;
     }
 }

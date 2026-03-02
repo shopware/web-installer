@@ -110,7 +110,7 @@ EOT;
         $composerJsonPath = $projectDir . '/composer.json';
 
         /** @var array{require: array<string, string>, config?: array{platform?: string, "allow-plugins": array<string, bool>, repositories?: ComposerRepository[]}} $composerJson */
-        $composerJson = json_decode((string) file_get_contents($composerJsonPath), true, \JSON_THROW_ON_ERROR);
+        $composerJson = json_decode((string) file_get_contents($composerJsonPath), true, flags: \JSON_THROW_ON_ERROR);
 
         $composerJson['require']['symfony/flex'] = '^2';
 
@@ -174,7 +174,7 @@ EOT;
     {
         $envPath = $projectDir . '/.env';
 
-        if (!file_exists($envPath)) {
+        if (!is_file($envPath)) {
             file_put_contents($envPath, self::ENV_DEFAULT);
 
             return;

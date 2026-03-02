@@ -39,8 +39,8 @@ class RecoveryManagerTest extends TestCase
     {
         $recoveryManager = new RecoveryManager();
 
-        static::expectException(\RuntimeException::class);
-        static::expectExceptionMessage('Could not find Shopware installation');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Could not find Shopware installation');
         $recoveryManager->getShopwareLocation();
     }
 
@@ -56,8 +56,8 @@ class RecoveryManagerTest extends TestCase
         $fs->mkdir($tmpDir . '/foo');
         $fs->touch($tmpDir . '/foo/shopware-installer.phar.php');
 
-        static::expectException(\RuntimeException::class);
-        static::expectExceptionMessage('Could not find Shopware installation');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Could not find Shopware installation');
         $recoveryManager->getShopwareLocation();
 
         $fs->remove($tmpDir);
@@ -112,8 +112,8 @@ class RecoveryManagerTest extends TestCase
     {
         $recoveryManager = new RecoveryManager();
 
-        static::expectException(\RuntimeException::class);
-        static::expectExceptionMessage('Could not find composer.lock file');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Could not find composer.lock file');
         $recoveryManager->getCurrentShopwareVersion(__DIR__);
     }
 
@@ -131,8 +131,8 @@ class RecoveryManagerTest extends TestCase
             'packages' => [],
         ], \JSON_THROW_ON_ERROR));
 
-        static::expectException(\RuntimeException::class);
-        static::expectExceptionMessage('Could not find Shopware in composer.lock file');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Could not find Shopware in composer.lock file');
         $recoveryManager->getCurrentShopwareVersion($tmpDir);
     }
 

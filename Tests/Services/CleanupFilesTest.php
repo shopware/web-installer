@@ -24,17 +24,17 @@ class CleanupFilesTest extends TestCase
 
         $fs->mkdir($tmpDir);
 
-        $hashContaingFile = Path::join($tmpDir, 'config/packages/shopware.yaml');
+        $hashContainingFile = Path::join($tmpDir, 'config/packages/shopware.yaml');
         $fileNotMentioned = Path::join($tmpDir, 'config/packages/z-shopware.yaml');
 
-        $fs->dumpFile($hashContaingFile, 'shopware');
+        $fs->dumpFile($hashContainingFile, 'shopware');
         $fs->dumpFile($fileNotMentioned, 'my custom fuu');
 
         $cleanupFiles = new CleanupFiles();
         $cleanupFiles->cleanup($tmpDir);
 
-        static::assertFileExists($hashContaingFile);
-        static::assertStringEqualsFile($hashContaingFile, 'shopware');
+        static::assertFileExists($hashContainingFile);
+        static::assertStringEqualsFile($hashContainingFile, 'shopware');
         static::assertFileExists($fileNotMentioned);
         static::assertStringEqualsFile($fileNotMentioned, 'my custom fuu');
 

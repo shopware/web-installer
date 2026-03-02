@@ -163,7 +163,7 @@ class FlexMigratorTest extends TestCase
 
         $flexMigrator->patchRootComposerJson($tmpDir);
 
-        $composerJson = json_decode((string) file_get_contents($tmpDir . '/composer.json'), true);
+        $composerJson = json_decode((string) file_get_contents($tmpDir . '/composer.json'), true, flags: JSON_THROW_ON_ERROR);
 
         static::assertEquals(
             [

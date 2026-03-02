@@ -28,11 +28,11 @@ class ReleaseInfoProvider
         /** @var array<string> $versions */
         $versions = $this->client->request('GET', 'https://releases.shopware.com/changelog/index.json')->toArray();
 
-        usort($versions, function ($a, $b) {
+        usort($versions, static function ($a, $b) {
             return version_compare($b, $a);
         });
 
-        return array_values(array_filter($versions, function ($version) {
+        return array_values(array_filter($versions, static function ($version) {
             return version_compare($version, '6.4.18.0', '>=');
         }));
     }
