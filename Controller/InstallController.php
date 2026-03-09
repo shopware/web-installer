@@ -9,6 +9,7 @@ use Shopware\WebInstaller\Services\ProjectComposerJsonUpdater;
 use Shopware\WebInstaller\Services\RecoveryManager;
 use Shopware\WebInstaller\Services\ReleaseInfoProvider;
 use Shopware\WebInstaller\Services\StreamedCommandResponseGenerator;
+use Shopware\WebInstaller\Services\TrackingEvent;
 use Shopware\WebInstaller\Services\TrackingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
@@ -49,7 +50,7 @@ class InstallController extends AbstractController
         $shopwareVersion = $request->query->get('shopwareVersion', '');
         $trackingId = $request->getSession()->get('trackingId', '');
 
-        $this->trackingService->track('install.started', $trackingId, [
+        $this->trackingService->track(TrackingEvent::InstallStarted, $trackingId, [
             'shopware_version' => $shopwareVersion,
         ]);
 
@@ -70,7 +71,7 @@ class InstallController extends AbstractController
         );
 
         $finish = function (Process $process) use ($request, $shopwareVersion, $trackingId): void {
-            $this->trackingService->track($process->isSuccessful() ? 'install.completed' : 'install.failed', $trackingId, [
+            $this->trackingService->track($process->isSuccessful() ? TrackingEvent::InstallCompleted : TrackingEvent::InstallFailed, $trackingId, [
                 'shopware_version' => $shopwareVersion,
             ]);
 

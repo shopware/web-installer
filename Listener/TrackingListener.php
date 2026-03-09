@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Listener;
 
+use Shopware\WebInstaller\Services\TrackingEvent;
 use Shopware\WebInstaller\Services\TrackingService;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -44,7 +45,7 @@ class TrackingListener
             }
         }
 
-        $this->trackingService->track('visit', $trackingId, [
+        $this->trackingService->track(TrackingEvent::Visit, $trackingId, [
             'source' => $source,
             'language' => $request->getLocale(),
             'php_version' => \PHP_VERSION,

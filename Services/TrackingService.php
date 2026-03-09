@@ -28,7 +28,7 @@ class TrackingService
     /**
      * @param array<string, string|int|float|bool> $tags
      */
-    public function track(string $eventName, string $userId, array $tags = []): void
+    public function track(TrackingEvent $eventName, string $userId, array $tags = []): void
     {
         if (Platform::getEnv('DO_NOT_TRACK') !== false) {
             return;
@@ -39,7 +39,7 @@ class TrackingService
         }
 
         $payload = json_encode([
-            'event' => 'web_installer.' . $eventName,
+            'event' => 'web_installer.' . $eventName->value,
             'tags' => $tags,
             'user_id' => $userId,
             'timestamp' => (new \DateTime())->format(\DateTimeInterface::ATOM),

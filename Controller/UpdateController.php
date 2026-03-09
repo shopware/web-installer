@@ -13,6 +13,7 @@ use Shopware\WebInstaller\Services\ProjectComposerJsonUpdater;
 use Shopware\WebInstaller\Services\RecoveryManager;
 use Shopware\WebInstaller\Services\ReleaseInfoProvider;
 use Shopware\WebInstaller\Services\StreamedCommandResponseGenerator;
+use Shopware\WebInstaller\Services\TrackingEvent;
 use Shopware\WebInstaller\Services\TrackingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,7 +84,7 @@ class UpdateController extends AbstractController
         $composerJsonPath = $shopwarePath . '/composer.json';
         $trackingId = $request->getSession()->get('trackingId', '');
 
-        $this->trackingService->track('update.started', $trackingId, [
+        $this->trackingService->track(TrackingEvent::UpdateStarted, $trackingId, [
             'shopware_version_from' => $currentVersion,
             'shopware_version_to' => $version,
             'is_flex_project' => $this->recoveryManager->isFlexProject($shopwarePath),
@@ -118,7 +119,7 @@ class UpdateController extends AbstractController
                 ? $composerJsonBackup->remove()
                 : $composerJsonBackup->restore();
 
-            $this->trackingService->track($process->isSuccessful() ? 'update.completed' : 'update.failed', $trackingId, [
+            $this->trackingService->track($process->isSuccessful() ? TrackingEvent::UpdateCompleted : TrackingEvent::UpdateFailed, $trackingId, [
                 'shopware_version_from' => $currentVersion,
                 'shopware_version_to' => $version,
             ]);
