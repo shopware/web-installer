@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Services;
 
+use Composer\Util\Platform;
+
 /**
  * @internal
  */
@@ -18,7 +20,9 @@ class TrackingService
     public function __construct()
     {
         $this->socket = @socket_create(\AF_INET, \SOCK_DGRAM, \SOL_UDP);
-        $this->domain = $_ENV['SHOPWARE_TRACKING_DOMAIN'] ?? $_SERVER['SHOPWARE_TRACKING_DOMAIN'] ?? self::DEFAULT_TRACKING_DOMAIN;
+
+        $domain = Platform::getEnv('SHOPWARE_TRACKING_DOMAIN');
+        $this->domain = $domain !== false ? $domain : self::DEFAULT_TRACKING_DOMAIN;
     }
 
     /**
@@ -26,7 +30,7 @@ class TrackingService
      */
     public function track(string $eventName, string $userId, array $tags = []): void
     {
-        if (isset($_ENV['DO_NOT_TRACK']) || isset($_SERVER['DO_NOT_TRACK'])) {
+        if (Platform::getEnv('DO_NOT_TRACK') !== false) {
             return;
         }
 
