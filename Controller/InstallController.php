@@ -9,6 +9,8 @@ use Shopware\WebInstaller\Services\ProjectComposerJsonUpdater;
 use Shopware\WebInstaller\Services\RecoveryManager;
 use Shopware\WebInstaller\Services\ReleaseInfoProvider;
 use Shopware\WebInstaller\Services\StreamedCommandResponseGenerator;
+use Shopware\WebInstaller\Services\TrackingEvent;
+use Shopware\WebInstaller\Services\TrackingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +30,7 @@ class InstallController extends AbstractController
         private readonly ReleaseInfoProvider              $releaseInfoProvider,
         private readonly ProjectComposerJsonUpdater       $projectComposerJsonUpdater,
         private readonly LanguageProvider                 $languageProvider,
+        private readonly TrackingService                  $trackingService,
     ) {}
 
     #[Route('/install', name: 'install', defaults: ['step' => 2])]
@@ -45,6 +48,12 @@ class InstallController extends AbstractController
     public function run(Request $request): StreamedResponse
     {
         $shopwareVersion = $request->query->get('shopwareVersion', '');
+        $trackingId = $request->getSession()->get('trackingId', '');
+
+        $this->trackingService->track(TrackingEvent::InstallStarted, $trackingId, [
+            'shopware_version' => $shopwareVersion,
+        ]);
+
         $folder = $this->recoveryManager->getProjectDir();
 
         $fs = new Filesystem();
@@ -61,7 +70,11 @@ class InstallController extends AbstractController
             $shopwareVersion
         );
 
-        $finish = function (Process $process) use ($request): void {
+        $finish = function (Process $process) use ($request, $shopwareVersion, $trackingId): void {
+            $this->trackingService->track($process->isSuccessful() ? TrackingEvent::InstallCompleted : TrackingEvent::InstallFailed, $trackingId, [
+                'shopware_version' => $shopwareVersion,
+            ]);
+
             $data = [
                 'success' => $process->isSuccessful(),
             ];

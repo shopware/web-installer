@@ -13,6 +13,7 @@ use Shopware\WebInstaller\Services\ProjectComposerJsonUpdater;
 use Shopware\WebInstaller\Services\RecoveryManager;
 use Shopware\WebInstaller\Services\ReleaseInfoProvider;
 use Shopware\WebInstaller\Services\StreamedCommandResponseGenerator;
+use Shopware\WebInstaller\Services\TrackingService;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +40,7 @@ class InstallControllerTest extends TestCase
         $responseGenerator = $this->createMock(StreamedCommandResponseGenerator::class);
         $responseGenerator->method('runJSON')->willReturn(new StreamedResponse());
 
-        $controller = new InstallController($recovery, $responseGenerator, $this->createMock(ReleaseInfoProvider::class), $this->createMock(ProjectComposerJsonUpdater::class), $this->createMock(LanguageProvider::class));
+        $controller = new InstallController($recovery, $responseGenerator, $this->createMock(ReleaseInfoProvider::class), $this->createMock(ProjectComposerJsonUpdater::class), $this->createMock(LanguageProvider::class), $this->createMock(TrackingService::class));
         $controller->setContainer($this->buildContainer());
 
         $response = $controller->index();
@@ -75,7 +76,7 @@ class InstallControllerTest extends TestCase
             ])
             ->willReturn(new StreamedResponse());
 
-        $controller = new InstallController($recovery, $responseGenerator, $this->createMock(ReleaseInfoProvider::class), $this->createMock(ProjectComposerJsonUpdater::class), $this->createMock(LanguageProvider::class));
+        $controller = new InstallController($recovery, $responseGenerator, $this->createMock(ReleaseInfoProvider::class), $this->createMock(ProjectComposerJsonUpdater::class), $this->createMock(LanguageProvider::class), $this->createMock(TrackingService::class));
         $controller->setContainer($this->buildContainer());
 
         $request = new Request();
@@ -190,7 +191,8 @@ class InstallControllerTest extends TestCase
             $responseGenerator,
             $this->createMock(ReleaseInfoProvider::class),
             $this->createMock(ProjectComposerJsonUpdater::class),
-            $this->createMock(LanguageProvider::class)
+            $this->createMock(LanguageProvider::class),
+            $this->createMock(TrackingService::class),
         );
         $installController->setContainer($this->buildContainer());
 

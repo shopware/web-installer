@@ -13,6 +13,8 @@ use Shopware\WebInstaller\Services\ProjectComposerJsonUpdater;
 use Shopware\WebInstaller\Services\RecoveryManager;
 use Shopware\WebInstaller\Services\ReleaseInfoProvider;
 use Shopware\WebInstaller\Services\StreamedCommandResponseGenerator;
+use Shopware\WebInstaller\Services\TrackingEvent;
+use Shopware\WebInstaller\Services\TrackingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,6 +33,7 @@ class UpdateController extends AbstractController
         private readonly StreamedCommandResponseGenerator $streamedCommandResponseGenerator,
         private readonly ProjectComposerJsonUpdater $projectComposerJsonUpdater,
         private readonly LanguageProvider $languageProvider,
+        private readonly TrackingService $trackingService,
     ) {}
 
     #[Route('/update', name: 'update', defaults: ['step' => 2], methods: ['GET'])]
@@ -77,7 +80,15 @@ class UpdateController extends AbstractController
         $version = $request->query->get('shopwareVersion', '');
 
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
+        $currentVersion = $this->recoveryManager->getCurrentShopwareVersion($shopwarePath);
         $composerJsonPath = $shopwarePath . '/composer.json';
+        $trackingId = $request->getSession()->get('trackingId', '');
+
+        $this->trackingService->track(TrackingEvent::UpdateStarted, $trackingId, [
+            'shopware_version_from' => $currentVersion,
+            'shopware_version_to' => $version,
+            'is_flex_project' => $this->recoveryManager->isFlexProject($shopwarePath),
+        ]);
 
         $composerJsonBackup = new FileBackup($composerJsonPath);
         $composerJsonBackup->backup();
@@ -103,10 +114,15 @@ class UpdateController extends AbstractController
             '--no-scripts',
             '-v',
             '--with-all-dependencies', // update all packages
-        ], function (Process $process) use ($composerJsonBackup): void {
+        ], function (Process $process) use ($composerJsonBackup, $trackingId, $currentVersion, $version): void {
             $process->isSuccessful()
                 ? $composerJsonBackup->remove()
                 : $composerJsonBackup->restore();
+
+            $this->trackingService->track($process->isSuccessful() ? TrackingEvent::UpdateCompleted : TrackingEvent::UpdateFailed, $trackingId, [
+                'shopware_version_from' => $currentVersion,
+                'shopware_version_to' => $version,
+            ]);
         });
     }
 

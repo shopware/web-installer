@@ -16,6 +16,7 @@ use Shopware\WebInstaller\Services\ProjectComposerJsonUpdater;
 use Shopware\WebInstaller\Services\RecoveryManager;
 use Shopware\WebInstaller\Services\ReleaseInfoProvider;
 use Shopware\WebInstaller\Services\StreamedCommandResponseGenerator;
+use Shopware\WebInstaller\Services\TrackingService;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,6 +49,7 @@ class UpdateControllerTest extends TestCase
             $this->createMock(StreamedCommandResponseGenerator::class),
             $this->createMock(ProjectComposerJsonUpdater::class),
             $this->createMock(LanguageProvider::class),
+            $this->createMock(TrackingService::class),
         );
 
         $controller->setContainer($this->buildContainer());
@@ -74,6 +76,7 @@ class UpdateControllerTest extends TestCase
             $this->createMock(StreamedCommandResponseGenerator::class),
             $this->createMock(ProjectComposerJsonUpdater::class),
             $this->createMock(LanguageProvider::class),
+            $this->createMock(TrackingService::class),
         );
         $controller->setContainer($this->buildContainer());
 
@@ -99,6 +102,7 @@ class UpdateControllerTest extends TestCase
             $this->createMock(StreamedCommandResponseGenerator::class),
             $this->createMock(ProjectComposerJsonUpdater::class),
             $this->createMock(LanguageProvider::class),
+            $this->createMock(TrackingService::class),
         );
         $controller->setContainer($this->buildContainer());
 
@@ -145,6 +149,7 @@ class UpdateControllerTest extends TestCase
             $this->createMock(StreamedCommandResponseGenerator::class),
             $this->createMock(ProjectComposerJsonUpdater::class),
             $this->createMock(LanguageProvider::class),
+            $this->createMock(TrackingService::class),
         );
 
         $controller->setContainer($this->buildContainer());
@@ -182,6 +187,7 @@ class UpdateControllerTest extends TestCase
             $responseGenerator,
             $this->createMock(ProjectComposerJsonUpdater::class),
             $this->createMock(LanguageProvider::class),
+            $this->createMock(TrackingService::class),
         );
         $controller->setContainer($this->buildContainer());
 
@@ -220,6 +226,7 @@ class UpdateControllerTest extends TestCase
             $responseGenerator,
             $this->createMock(ProjectComposerJsonUpdater::class),
             $this->createMock(LanguageProvider::class),
+            $this->createMock(TrackingService::class),
         );
         $controller->setContainer($this->buildContainer());
 
@@ -277,6 +284,7 @@ class UpdateControllerTest extends TestCase
             $responseGenerator,
             $this->createMock(ProjectComposerJsonUpdater::class),
             $this->createMock(LanguageProvider::class),
+            $this->createMock(TrackingService::class),
         );
         $controller->setContainer($this->buildContainer());
 
@@ -334,6 +342,7 @@ class UpdateControllerTest extends TestCase
             $responseGenerator,
             $this->createMock(ProjectComposerJsonUpdater::class),
             $this->createMock(LanguageProvider::class),
+            $this->createMock(TrackingService::class),
         );
         $controller->setContainer($this->buildContainer());
 
@@ -407,6 +416,7 @@ class UpdateControllerTest extends TestCase
             $responseGenerator,
             $this->createMock(ProjectComposerJsonUpdater::class),
             $this->createMock(LanguageProvider::class),
+            $this->createMock(TrackingService::class),
         );
         $controller->setContainer($this->buildContainer());
 
@@ -457,6 +467,7 @@ class UpdateControllerTest extends TestCase
             $responseGenerator,
             $this->createMock(ProjectComposerJsonUpdater::class),
             $this->createMock(LanguageProvider::class),
+            $this->createMock(TrackingService::class),
         );
         $controller->setContainer($this->buildContainer());
 
