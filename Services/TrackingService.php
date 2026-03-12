@@ -13,13 +13,16 @@ class TrackingService
 {
     private const DEFAULT_TRACKING_DOMAIN = 'udp.usage.shopware.io';
 
-    private \Socket|false $socket;
+    /** @var \Socket|false|null */
+    private $socket = null;
 
     private string $domain;
 
     public function __construct()
     {
-        $this->socket = @socket_create(\AF_INET, \SOCK_DGRAM, \SOL_UDP);
+        if (\function_exists('socket_create')) {
+            $this->socket = @socket_create(\AF_INET, \SOCK_DGRAM, \SOL_UDP);
+        }
 
         $domain = Platform::getEnv('SHOPWARE_TRACKING_DOMAIN');
         $this->domain = $domain !== false ? $domain : self::DEFAULT_TRACKING_DOMAIN;
@@ -34,7 +37,11 @@ class TrackingService
             return;
         }
 
-        if ($this->socket === false) {
+        if (Platform::getEnv('SW_RECOVERY_NEXT_VERSION') !== false || Platform::getEnv('SW_RECOVERY_NEXT_BRANCH') !== false) {
+            return;
+        }
+
+        if (!$this->socket instanceof \Socket) {
             return;
         }
 

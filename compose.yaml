@@ -1,0 +1,35 @@
+services:
+  web:
+    image: webdevops/php-apache-dev:8.4
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/installer
+
+  database:
+    image: mariadb:latest
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: shopware
+    command:
+      - --sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+      - --log_bin_trust_function_creators=1
+      - --binlog_cache_size=16M
+      - --key_buffer_size=0
+      - --join_buffer_size=1024M
+      - --innodb_log_file_size=128M
+      - --innodb_buffer_pool_size=1024M
+      - --innodb_buffer_pool_instances=1
+      - --group_concat_max_len=320000
+      - --default-time-zone=+00:00
+      - --max_binlog_size=512M
+      - --binlog_expire_logs_seconds=86400
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-proot"]
+      start_interval: 3s
+      start_period: 10s
+      interval: 5s
+      timeout: 1s
+      retries: 10

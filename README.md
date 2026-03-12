@@ -25,10 +25,21 @@ Copy the created `shopware-installer.phar.php` file to the root directory of you
 
 Request that page in your browser with /shopware-installer.phar.php and the Installer will decide if you need to install or update Shopware.
 
-## Running the Web Installer for development
+## Local Development
 
-Change the files of this repository as needed, then compile and copy afterwards:
-`composer run build-phar && cp -f shopware-installer.phar.php your/directory/`
+Start the local Docker environment, install dependencies, and build the phar:
+
+    composer local:up
+
+The installer will be available at `http://localhost:8000/shopware-installer.phar.php`.
+
+After making changes, rebuild and copy the phar into the running container:
+
+    composer local:build
+
+To stop and remove the containers:
+
+    composer local:down
 
 ## Running update against an unreleased Shopware version
 
