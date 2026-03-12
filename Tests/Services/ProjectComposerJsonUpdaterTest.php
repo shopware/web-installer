@@ -149,6 +149,33 @@ class ProjectComposerJsonUpdaterTest extends TestCase
         );
     }
 
+    public function testUpdateWithCommercialRequirement(): void
+    {
+        file_put_contents($this->json, json_encode([
+            'require' => [
+                'shopware/core' => '1.2.3',
+                'shopware/commercial' => '1.2.3',
+            ],
+        ], \JSON_THROW_ON_ERROR));
+
+        (new ProjectComposerJsonUpdater(new MockHttpClient([$this->getEmptyVersionsResponse()])))->update(
+            $this->json,
+            '6.7.6.0'
+        );
+
+        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+
+        static::assertSame(
+            [
+                'require' => [
+                    'shopware/core' => '6.7.6.0',
+                    'shopware/commercial' => '7.6.0',
+                ],
+            ],
+            $composerJson
+        );
+    }
+
     public function testUpdateWithSymfonyRuntimeRequirement(): void
     {
         file_put_contents($this->json, json_encode([
