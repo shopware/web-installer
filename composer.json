@@ -63,9 +63,22 @@
     },
     "scripts": {
         "build-phar": [
-            "curl -qL -o box.phar https://github.com/box-project/box/releases/download/4.6.6/box.phar",
+            "curl -qL -o box.phar https://github.com/box-project/box/releases/download/4.6.10/box.phar",
             "@php -d phar.readonly=0 box.phar compile",
             "rm box.phar"
+        ],
+        "local:up": [
+            "docker compose up -d",
+            "docker compose exec -w /installer web composer install",
+            "@local:build",
+            "echo 'Installer available at http://localhost:8000/shopware-installer.phar.php'"
+        ],
+        "local:build": [
+            "docker compose exec -w /installer web composer build-phar",
+            "docker compose exec -w /installer web sh -c 'cp shopware-installer.phar.php /app/shopware-installer.phar.php'"
+        ],
+        "local:down": [
+            "docker compose down -v"
         ],
         "test": [
             "../../vendor/bin/phpunit"
