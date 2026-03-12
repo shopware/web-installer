@@ -37,6 +37,10 @@ class TrackingService
             return;
         }
 
+        if (Platform::getEnv('SW_RECOVERY_NEXT_VERSION') !== false || Platform::getEnv('SW_RECOVERY_NEXT_BRANCH') !== false) {
+            return;
+        }
+
         if (!$this->socket instanceof \Socket) {
             return;
         }
