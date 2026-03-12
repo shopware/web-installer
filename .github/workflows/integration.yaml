@@ -10,12 +10,12 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install dependencies
         run: composer install
       - name: Build phar
         run: composer run build-phar
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # 4
+      - uses: actions/upload-artifact@v7
         with:
           name: installer-phar
           path: shopware-installer.phar.php
@@ -69,7 +69,7 @@ jobs:
           path: new-shopware
 
       - name: Cache Storefront npm packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: new-shopware/src/Storefront/Resources/app/storefront/node_modules
           key: ${{ runner.os }}-storefront-${{ hashFiles('new-shopware/src/Storefront/Resources/app/storefront/package-lock.json') }}
@@ -89,7 +89,7 @@ jobs:
           composer -d src/Elasticsearch config version ${SW_RECOVERY_NEXT_VERSION}
 
       - name: Checkout template
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # 4
+        uses: actions/checkout@v6
         with:
           repository: shopware/production
           path: old-shopware
@@ -114,7 +114,7 @@ jobs:
           bin/console system:install --basic-setup --drop-database --create-database
 
       - name: Download WebInstaller
-        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # 4
+        uses: actions/download-artifact@v8
         with:
           name: installer-phar
           path: old-shopware/public
@@ -123,7 +123,7 @@ jobs:
         working-directory: old-shopware
         run: symfony server:start -d
 
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # 4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
 
@@ -144,7 +144,7 @@ jobs:
         working-directory: new-shopware/tests/acceptance
         run: npx playwright test --project=Update --trace=on
 
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # 4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-report-update-${{ matrix.update.type }}-${{ matrix.update.version }}
