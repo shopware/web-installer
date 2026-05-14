@@ -173,6 +173,7 @@ EOT;
     public function migrateEnvFile(string $projectDir): void
     {
         $envPath = $projectDir . '/.env';
+        $envLocalPath = $projectDir . '/.env.local';
 
         if (!is_file($envPath)) {
             file_put_contents($envPath, self::ENV_DEFAULT);
@@ -180,7 +181,10 @@ EOT;
             return;
         }
 
-        rename($envPath, $envPath . '.local');
+        if (!is_file($envLocalPath)) {
+            rename($envPath, $envLocalPath);
+        }
+
         file_put_contents($envPath, self::ENV_DEFAULT);
     }
 
