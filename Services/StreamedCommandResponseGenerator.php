@@ -23,7 +23,13 @@ class StreamedCommandResponseGenerator
     public function run(array $params, callable $finish): StreamedResponse
     {
         $process = new Process($params);
-        $process->setEnv(['COMPOSER_HOME' => sys_get_temp_dir() . '/composer']);
+        /** @phpstan-ignore-next-line False prevents Symfony Process from forwarding inherited environment variables. */
+        $process->setEnv([
+            'COMPOSER_HOME' => sys_get_temp_dir() . '/composer',
+            // The installer starts CLI commands from a web request. Symfony Runtime
+            // 7.4.12+ clears argv when QUERY_STRING is present, so do not forward it.
+            'QUERY_STRING' => false,
+        ]);
 
         // Read process timeout from environment or use default value
         $timeout = Platform::getEnv('SHOPWARE_INSTALLER_TIMEOUT');
