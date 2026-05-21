@@ -41,6 +41,30 @@ class StreamedCommandResponseGeneratorTest extends TestCase
         static::assertSame('foo' . \PHP_EOL . '{"success":true}', $content);
     }
 
+    public function testRunJSONDoesNotForwardQueryStringToChildProcesses(): void
+    {
+        $_SERVER['QUERY_STRING'] = 'shopwareVersion=6.7.9999999.9999999';
+        $_ENV['QUERY_STRING'] = 'shopwareVersion=6.7.9999999.9999999';
+        putenv('QUERY_STRING=shopwareVersion=6.7.9999999.9999999');
+
+        try {
+            $response = (new StreamedCommandResponseGenerator())->runJSON([
+                \PHP_BINARY,
+                '-r',
+                'echo getenv("QUERY_STRING") === false ? "clean" : "leaked";',
+            ]);
+
+            ob_start();
+            $response->sendContent();
+            $content = ob_get_clean();
+
+            static::assertSame('clean{"success":true}', $content);
+        } finally {
+            unset($_SERVER['QUERY_STRING'], $_ENV['QUERY_STRING']);
+            putenv('QUERY_STRING');
+        }
+    }
+
     public function testCustomTimeoutFromEnv(): void
     {
         $customTimeout = 333.0;
