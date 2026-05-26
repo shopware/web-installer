@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> **The recommended way to install Shopware is [shopware-cli](https://github.com/shopware/shopware-cli)** —
+> a fully-featured CLI for installing, managing and developing with Shopware.
+> Our primary focus is on Shopware CLI and we do not plan to invest significant time in the web installer going forward.
+
 # Web Installer
 
 The web installer is a simple Symfony application packaged as a Phar file, that allows running automated Composer commands to install or update Shopware.
