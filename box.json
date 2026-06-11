@@ -3,6 +3,7 @@
     "main": false,
     "files": ["index.php"],
     "directories": ["."],
+    "blacklist": ["node_modules"],
     "finder": [
         {
             "name": "*",
