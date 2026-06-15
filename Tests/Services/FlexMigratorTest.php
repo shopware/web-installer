@@ -87,6 +87,27 @@ class FlexMigratorTest extends TestCase
         $fs->remove($tmpDir);
     }
 
+    public function testMigrateEnvDoesNotOverwriteExistingEnvLocal(): void
+    {
+        $tmpDir = sys_get_temp_dir() . '/flex-migrator-test';
+        $fs = new Filesystem();
+        $fs->mkdir($tmpDir);
+        $fs->dumpFile($tmpDir . '/.env', 'DATABASE_URL=mysql://user:pass@localhost/real_db');
+        $fs->dumpFile($tmpDir . '/.env.local', 'DATABASE_URL=mysql://user:pass@localhost/real_db');
+
+        $flexMigrator = new FlexMigrator();
+
+        $flexMigrator->migrateEnvFile($tmpDir);
+
+        static::assertFileExists($tmpDir . '/.env');
+        static::assertFileExists($tmpDir . '/.env.local');
+        static::assertStringContainsString('###> symfony/lock ###', (string) file_get_contents($tmpDir . '/.env'));
+        // The existing .env.local must not be overwritten
+        static::assertSame('DATABASE_URL=mysql://user:pass@localhost/real_db', (string) file_get_contents($tmpDir . '/.env.local'));
+
+        $fs->remove($tmpDir);
+    }
+
     public static function composerCases(): \Generator
     {
         yield 'no repos' => [
