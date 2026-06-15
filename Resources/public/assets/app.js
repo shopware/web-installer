@@ -1,5 +1,29 @@
 const decoder = new TextDecoder();
 
+function parseResultLine(line) {
+    try {
+        const result = JSON.parse(line);
+        if (result !== null && typeof result.success === 'boolean') {
+            return result;
+        }
+    } catch {
+        // not the final status line, treat as log output
+    }
+
+    return null;
+}
+
+function appendLogLines(element, lines) {
+    if (lines.length === 0) {
+        return;
+    }
+
+    // Append as a single text node instead of innerHTML += per line: re-parsing
+    // the accumulated log is quadratic and freezes the browser on long updates.
+    element.appendChild(document.createTextNode(lines.join("\n") + "\n"));
+    element.scrollTop = element.scrollHeight;
+}
+
 async function tailLog(response, element) {
     const reader = response.body.getReader();
     let buffer = '';
@@ -8,41 +32,45 @@ async function tailLog(response, element) {
         const {value, done} = await reader.read();
 
         if (done) {
+            buffer += decoder.decode();
+
             if (buffer.trim()) {
-                try {
-                    const result = JSON.parse(buffer);
+                const result = parseResultLine(buffer);
+                if (result) {
                     if (!result.success) {
                         throw new Error('update failed');
                     }
                     return result;
-                } catch {
-                    element.innerHTML += `${buffer}\n`;
-                    element.scrollTop = element.scrollHeight;
                 }
+
+                appendLogLines(element, [buffer]);
             }
             break;
         }
 
-        const text = decoder.decode(value);
-        buffer += text;
+        buffer += decoder.decode(value, {stream: true});
 
         const lines = buffer.split("\n");
         buffer = lines.pop();
 
+        const logLines = [];
         for (const line of lines) {
             if (line.trim() === '') continue;
 
-            try {
-                const result = JSON.parse(line);
+            const result = parseResultLine(line);
+            if (result) {
+                appendLogLines(element, logLines);
+
                 if (!result.success) {
                     throw new Error('update failed');
                 }
                 return result;
-            } catch {
-                element.innerHTML += `${line}\n`;
-                element.scrollTop = element.scrollHeight;
             }
+
+            logLines.push(line);
         }
+
+        appendLogLines(element, logLines);
     }
 
     throw new Error('Unexpected end of stream');
