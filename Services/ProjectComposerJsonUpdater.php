@@ -56,6 +56,7 @@ class ProjectComposerJsonUpdater
             $composerJson['require'][$shopwarePackage] = $version;
         }
 
+        $composerJson = $this->ensureConflictsRepository($composerJson);
         $composerJson = $this->configureRepositories($composerJson);
 
         file_put_contents($file, json_encode($composerJson, \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
@@ -78,6 +79,44 @@ class ProjectComposerJsonUpdater
         }
 
         return $latestVersion;
+    }
+
+    /**
+     * Ensures the shopware/conflicts composer repository is registered so the
+     * shopware/conflicts package can be resolved during install and update.
+     *
+     * @see https://github.com/shopware/conflicts/blob/main/USAGES.md
+     *
+     * @param array<mixed> $config
+     *
+     * @return array<mixed>
+     */
+    private function ensureConflictsRepository(array $config): array
+    {
+        if (!isset($config['repositories'])) {
+            $config['repositories'] = [];
+        }
+
+        $repositories = $config['repositories'];
+
+        foreach ($repositories as $repository) {
+            if (!\is_array($repository)) {
+                continue;
+            }
+
+            if (($repository['url'] ?? null) === 'https://shopware.github.io/conflicts/') {
+                return $config;
+            }
+        }
+
+        $repositories['shopware-conflicts'] = [
+            'type' => 'composer',
+            'url' => 'https://shopware.github.io/conflicts/',
+        ];
+
+        $config['repositories'] = $repositories;
+
+        return $config;
     }
 
     /**
