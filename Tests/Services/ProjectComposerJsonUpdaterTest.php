@@ -50,6 +50,12 @@ class ProjectComposerJsonUpdaterTest extends TestCase
                 'require' => [
                     'shopware/core' => '6.4.18.0',
                 ],
+                'repositories' => [
+                    [
+                        'type' => 'composer',
+                        'url' => 'https://shopware.github.io/conflicts/',
+                    ],
+                ],
             ],
             $composerJson
         );
@@ -70,6 +76,12 @@ class ProjectComposerJsonUpdaterTest extends TestCase
                     'shopware/core' => '6.4.18.0-rc1',
                 ],
                 'minimum-stability' => 'RC',
+                'repositories' => [
+                    [
+                        'type' => 'composer',
+                        'url' => 'https://shopware.github.io/conflicts/',
+                    ],
+                ],
             ],
             $composerJson
         );
@@ -94,6 +106,12 @@ class ProjectComposerJsonUpdaterTest extends TestCase
                     'shopware/core' => 'dev-trunk as 6.5.0.0',
                 ],
                 'minimum-stability' => 'RC',
+                'repositories' => [
+                    [
+                        'type' => 'composer',
+                        'url' => 'https://shopware.github.io/conflicts/',
+                    ],
+                ],
             ],
             $composerJson
         );
@@ -119,6 +137,12 @@ class ProjectComposerJsonUpdaterTest extends TestCase
                     'shopware/core' => 'main as 6.5.0.0',
                 ],
                 'minimum-stability' => 'RC',
+                'repositories' => [
+                    [
+                        'type' => 'composer',
+                        'url' => 'https://shopware.github.io/conflicts/',
+                    ],
+                ],
             ],
             $composerJson
         );
@@ -144,6 +168,12 @@ class ProjectComposerJsonUpdaterTest extends TestCase
                     'shopware/core' => '6.5.0.0',
                 ],
                 'minimum-stability' => 'RC',
+                'repositories' => [
+                    [
+                        'type' => 'composer',
+                        'url' => 'https://shopware.github.io/conflicts/',
+                    ],
+                ],
             ],
             $composerJson
         );
@@ -170,6 +200,12 @@ class ProjectComposerJsonUpdaterTest extends TestCase
                 'require' => [
                     'shopware/core' => '6.6.0.0',
                     'symfony/runtime' => '>=5',
+                ],
+                'repositories' => [
+                    [
+                        'type' => 'composer',
+                        'url' => 'https://shopware.github.io/conflicts/',
+                    ],
                 ],
             ],
             $composerJson
@@ -199,6 +235,12 @@ class ProjectComposerJsonUpdaterTest extends TestCase
                     'shopware/core' => '6.7.0.0',
                     'symfony/runtime' => '>=5',
                 ],
+                'repositories' => [
+                    [
+                        'type' => 'composer',
+                        'url' => 'https://shopware.github.io/conflicts/',
+                    ],
+                ],
             ],
             $composerJson
         );
@@ -226,6 +268,12 @@ class ProjectComposerJsonUpdaterTest extends TestCase
                     'shopware/core' => '6.6.0.0',
                     'symfony/runtime' => '>=5',
                     'shopware/conflicts' => '>=2.0.0',
+                ],
+                'repositories' => [
+                    [
+                        'type' => 'composer',
+                        'url' => 'https://shopware.github.io/conflicts/',
+                    ],
                 ],
             ],
             $composerJson
@@ -255,6 +303,12 @@ class ProjectComposerJsonUpdaterTest extends TestCase
                     'symfony/runtime' => '>=5',
                     'shopware/conflicts' => '>=1.0.0',
                 ],
+                'repositories' => [
+                    [
+                        'type' => 'composer',
+                        'url' => 'https://shopware.github.io/conflicts/',
+                    ],
+                ],
             ],
             $composerJson
         );
@@ -282,6 +336,12 @@ class ProjectComposerJsonUpdaterTest extends TestCase
                     'shopware/core' => '6.4.0.0',
                     'symfony/runtime' => '>=5',
                     'shopware/conflicts' => '>=1.0.0',
+                ],
+                'repositories' => [
+                    [
+                        'type' => 'composer',
+                        'url' => 'https://shopware.github.io/conflicts/',
+                    ],
                 ],
             ],
             $composerJson
@@ -318,10 +378,123 @@ class ProjectComposerJsonUpdaterTest extends TestCase
                 ],
                 'minimum-stability' => 'RC',
                 'repositories' => [
-                    'recovery' => $customRepo,
+                    [
+                        'type' => 'composer',
+                        'url' => 'https://shopware.github.io/conflicts/',
+                    ],
+                    $customRepo,
                 ],
             ],
             $composerJson
+        );
+    }
+
+    public function testUpdateKeepsExistingConflictsRepository(): void
+    {
+        $existingRepo = [
+            'type' => 'composer',
+            'url' => 'https://shopware.github.io/conflicts/',
+        ];
+
+        file_put_contents($this->json, json_encode([
+            'require' => [
+                'shopware/core' => '1.2.3',
+            ],
+            'repositories' => [
+                $existingRepo,
+            ],
+        ], \JSON_THROW_ON_ERROR));
+
+        (new ProjectComposerJsonUpdater(new MockHttpClient([$this->getEmptyVersionsResponse()])))->update(
+            $this->json,
+            '6.4.18.0'
+        );
+
+        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+
+        // Existing conflicts repository is preserved and not duplicated
+        static::assertSame(
+            [
+                [
+                    'type' => 'composer',
+                    'url' => 'https://shopware.github.io/conflicts/',
+                ],
+            ],
+            $composerJson['repositories']
+        );
+    }
+
+    public function testConflictsRepositoryPreservesIndexedListForm(): void
+    {
+        $pathRepo = [
+            'type' => 'path',
+            'url' => 'custom/plugins/*',
+            'options' => ['symlink' => true],
+        ];
+
+        file_put_contents($this->json, json_encode([
+            'require' => [
+                'shopware/core' => '1.2.3',
+            ],
+            'repositories' => [
+                $pathRepo,
+            ],
+        ], \JSON_THROW_ON_ERROR));
+
+        (new ProjectComposerJsonUpdater(new MockHttpClient([$this->getEmptyVersionsResponse()])))->update(
+            $this->json,
+            '6.4.18.0'
+        );
+
+        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+
+        // Existing list form is preserved; conflicts repo appended as a list item
+        static::assertSame(
+            [
+                $pathRepo,
+                [
+                    'type' => 'composer',
+                    'url' => 'https://shopware.github.io/conflicts/',
+                ],
+            ],
+            $composerJson['repositories']
+        );
+    }
+
+    public function testConflictsRepositoryPreservesKeyedMapForm(): void
+    {
+        $pathRepo = [
+            'type' => 'path',
+            'url' => 'custom/plugins/*',
+            'options' => ['symlink' => true],
+        ];
+
+        file_put_contents($this->json, json_encode([
+            'require' => [
+                'shopware/core' => '1.2.3',
+            ],
+            'repositories' => [
+                'plugins' => $pathRepo,
+            ],
+        ], \JSON_THROW_ON_ERROR));
+
+        (new ProjectComposerJsonUpdater(new MockHttpClient([$this->getEmptyVersionsResponse()])))->update(
+            $this->json,
+            '6.4.18.0'
+        );
+
+        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+
+        // Existing keyed map form is preserved; conflicts repo added under a named key
+        static::assertSame(
+            [
+                'plugins' => $pathRepo,
+                'shopware-conflicts' => [
+                    'type' => 'composer',
+                    'url' => 'https://shopware.github.io/conflicts/',
+                ],
+            ],
+            $composerJson['repositories']
         );
     }
 

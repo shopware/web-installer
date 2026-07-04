@@ -105,6 +105,8 @@ jobs:
           jq '.config.audit = { "block-insecure": false }' composer.json > composer.json.new
           mv composer.json.new composer.json
 
+          composer config repositories.shopware-conflicts composer https://shopware.github.io/conflicts/
+
           composer require shopware/core:${{ matrix.update.version }}
 
       - name: Install
