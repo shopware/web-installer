@@ -85,6 +85,10 @@ class ProjectComposerJsonUpdater
      * Ensures the shopware/conflicts composer repository is registered so the
      * shopware/conflicts package can be resolved during install and update.
      *
+     * Existing `repositories` layouts are preserved: an indexed list stays a
+     * list and a keyed map stays a map. If the conflicts repository is already
+     * present (matched by URL) it is left untouched.
+     *
      * @see https://github.com/shopware/conflicts/blob/main/USAGES.md
      *
      * @param array<mixed> $config
@@ -93,28 +97,20 @@ class ProjectComposerJsonUpdater
      */
     private function ensureConflictsRepository(array $config): array
     {
-        if (!isset($config['repositories'])) {
-            $config['repositories'] = [];
-        }
-
-        $repositories = $config['repositories'];
-
-        foreach ($repositories as $repository) {
-            if (!\is_array($repository)) {
-                continue;
-            }
-
-            if (($repository['url'] ?? null) === 'https://shopware.github.io/conflicts/') {
-                return $config;
-            }
-        }
-
-        $repositories['shopware-conflicts'] = [
+        $conflictsRepository = [
             'type' => 'composer',
             'url' => 'https://shopware.github.io/conflicts/',
         ];
 
-        $config['repositories'] = $repositories;
+        if ($this->hasRepository($config['repositories'] ?? [], $conflictsRepository['url'])) {
+            return $config;
+        }
+
+        $config['repositories'] = $this->addRepository(
+            $config['repositories'] ?? [],
+            'shopware-conflicts',
+            $conflictsRepository
+        );
 
         return $config;
     }
@@ -134,10 +130,56 @@ class ProjectComposerJsonUpdater
                 return $config;
             }
 
-            $config['repositories']['recovery'] = $repo;
+            $config['repositories'] = $this->addRepository(
+                $config['repositories'] ?? [],
+                'recovery',
+                $repo
+            );
         }
 
         return $config;
+    }
+
+    /**
+     * Returns true when a repository with the given URL is already registered,
+     * no matter whether `repositories` is an indexed list or a keyed map.
+     *
+     * @param array<mixed> $repositories
+     */
+    private function hasRepository(array $repositories, string $url): bool
+    {
+        foreach ($repositories as $repository) {
+            if (!\is_array($repository)) {
+                continue;
+            }
+
+            if (($repository['url'] ?? null) === $url) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Adds a repository entry while preserving the existing `repositories`
+     * structure: an indexed list stays a list (entry appended), a keyed map
+     * stays a map (entry added under `$name`).
+     *
+     * @param array<int|string, mixed>              $repositories
+     * @param array{type: string, url: string, ...} $repository
+     *
+     * @return array<int|string, mixed>
+     */
+    private function addRepository(array $repositories, string $name, array $repository): array
+    {
+        if (array_is_list($repositories)) {
+            $repositories[] = $repository;
+        } else {
+            $repositories[$name] = $repository;
+        }
+
+        return $repositories;
     }
 
     private function getConflictMinVersion(string $shopwareVersion): ?string
