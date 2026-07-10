@@ -57,6 +57,7 @@ class InstallControllerTest extends TestCase
         $recovery->method('getShopwareLocation')->willReturn('location');
         $recovery->method('getPHPBinary')->willReturn('php');
         $recovery->method('getProjectDir')->willReturn($tmpDir);
+        $recovery->method('getInstallTargetDir')->willReturn($tmpDir);
 
         $responseGenerator = $this->createMock(StreamedCommandResponseGenerator::class);
         $responseGenerator
@@ -119,6 +120,70 @@ class InstallControllerTest extends TestCase
         (new Filesystem())->remove($tmpDir);
     }
 
+    public function testRunFinishCallableHandsOffToShopRootWhenPharInsidePublic(): void
+    {
+        $tmpDir = sys_get_temp_dir() . '/' . uniqid('test', true);
+        $publicDir = $tmpDir . '/public';
+        (new Filesystem())->mkdir($publicDir);
+
+        $finishCallable = null;
+
+        // PHAR dropped into a public/ directory (docroot=public/): the project is
+        // installed into the parent and the shop is served at the docroot root, so
+        // the hand-off must target "/" and NOT "/public/".
+        $recoveryManagerMock = $this->createMock(RecoveryManager::class);
+        $recoveryManagerMock->method('getProjectDir')->willReturn($publicDir);
+        $recoveryManagerMock->method('getInstallTargetDir')->willReturn($tmpDir);
+        $recoveryManagerMock->method('getPHPBinary')->willReturn('php');
+        $recoveryManagerMock->method('getBinary')->willReturn('binary');
+
+        $responseGenerator = $this->createMock(StreamedCommandResponseGenerator::class);
+        $responseGenerator
+            ->method('run')
+            ->willReturnCallback(function ($command, $finish) use (&$finishCallable) {
+                $finishCallable = $finish;
+
+                return new StreamedResponse();
+            });
+
+        $installController = new InstallController(
+            $recoveryManagerMock,
+            $responseGenerator,
+            $this->createMock(ReleaseInfoProvider::class),
+            $this->createMock(ProjectComposerJsonUpdater::class),
+            $this->createMock(LanguageProvider::class),
+            $this->createMock(TrackingService::class),
+        );
+        $installController->setContainer($this->buildContainer());
+
+        $request = new Request();
+        $request->setSession(new Session(new MockArraySessionStorage()));
+        $request->query->set('shopwareVersion', '6.7.3.0');
+        $request->setLocale('de');
+
+        $installController->run($request);
+
+        static::assertIsCallable($finishCallable);
+
+        $process = $this->createMock(Process::class);
+        $process->method('isSuccessful')->willReturn(true);
+
+        ob_start();
+        $finishCallable($process);
+        $output = ob_get_clean();
+        static::assertIsString($output);
+
+        $data = json_decode($output, true, flags: JSON_THROW_ON_ERROR);
+        static::assertIsArray($data);
+        static::assertArrayHasKey('newLocation', $data);
+        static::assertStringStartsWith('/?', $data['newLocation']);
+        static::assertStringNotContainsString('/public/', $data['newLocation']);
+        static::assertStringContainsString('ext_steps=1', $data['newLocation']);
+        static::assertStringContainsString('language=de', $data['newLocation']);
+
+        (new Filesystem())->remove($tmpDir);
+    }
+
     public function testRunFinishCallableOnFailure(): void
     {
         $finishCallable = null;
@@ -173,6 +238,7 @@ class InstallControllerTest extends TestCase
 
         $recoveryManagerMock = $this->createMock(RecoveryManager::class);
         $recoveryManagerMock->method('getProjectDir')->willReturn($tmpDir);
+        $recoveryManagerMock->method('getInstallTargetDir')->willReturn($tmpDir);
         $recoveryManagerMock->method('getPHPBinary')->willReturn('php');
         $recoveryManagerMock->method('getBinary')->willReturn('binary');
 
