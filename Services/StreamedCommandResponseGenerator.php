@@ -43,9 +43,11 @@ class StreamedCommandResponseGenerator
         $process->start();
 
         return new StreamedResponse(function () use ($process, $finish): void {
-            // drop PHP's output buffers so each chunk reaches the client (flush() alone won't)
-            while (ob_get_level() > 0) {
-                ob_end_flush();
+            // under a web SAPI, drop the output buffer so each chunk streams (flush() alone won't)
+            if (\PHP_SAPI !== 'cli') {
+                while (ob_get_level() > 0) {
+                    ob_end_flush();
+                }
             }
 
             try {
