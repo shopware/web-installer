@@ -36,6 +36,31 @@ class RecoveryManager
         return \dirname($fileName);
     }
 
+    /**
+     * Directory the fresh installation is written into: the parent when the PHAR sits in a
+     * "public/" docroot (as {@see getShopwareLocation()}), otherwise the PHAR's own directory.
+     */
+    public function getInstallTargetDir(): string
+    {
+        $projectDir = $this->getProjectDir();
+
+        return basename($projectDir) === 'public' ? \dirname($projectDir) : $projectDir;
+    }
+
+    /**
+     * The active flow: 'update' when a shop already exists ({@see getShopwareLocation()}), else 'install'.
+     */
+    public function getMode(): string
+    {
+        try {
+            $this->getShopwareLocation();
+
+            return 'update';
+        } catch (\RuntimeException) {
+            return 'install';
+        }
+    }
+
     public function getShopwareLocation(): string
     {
         $projectDir = $this->getProjectDir();

@@ -5,7 +5,7 @@ services:
     public: false
 
   Shopware\WebInstaller\:
-    resource: '../../{Listener,Services}'
+    resource: '../../{Listener,Services,Twig}'
 
   Shopware\WebInstaller\Controller\:
     resource: '../../Controller'

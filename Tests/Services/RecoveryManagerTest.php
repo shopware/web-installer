@@ -35,6 +35,72 @@ class RecoveryManagerTest extends TestCase
         static::assertSame(\dirname($fileName), $recoveryManager->getProjectDir());
     }
 
+    #[BackupGlobals(true)]
+    public function testGetInstallTargetDirInsidePublicReturnsParent(): void
+    {
+        $recoveryManager = new RecoveryManager();
+
+        $fs = new Filesystem();
+        $tmpDir = sys_get_temp_dir() . '/' . uniqid('shopware', true);
+        $fs->mkdir($tmpDir . '/public');
+
+        $_SERVER['SCRIPT_FILENAME'] = $tmpDir . '/public/shopware-installer.phar.php';
+        $fs->touch($_SERVER['SCRIPT_FILENAME']);
+
+        // PHAR sits in public/ → install into the parent (documented docroot=public/).
+        static::assertSame(realpath($tmpDir), $recoveryManager->getInstallTargetDir());
+
+        $fs->remove($tmpDir);
+    }
+
+    #[BackupGlobals(true)]
+    public function testGetInstallTargetDirOutsidePublicReturnsProjectDir(): void
+    {
+        $recoveryManager = new RecoveryManager();
+
+        $fs = new Filesystem();
+        $tmpDir = sys_get_temp_dir() . '/' . uniqid('shopware', true);
+        $fs->mkdir($tmpDir);
+
+        $_SERVER['SCRIPT_FILENAME'] = $tmpDir . '/shopware-installer.phar.php';
+        $fs->touch($_SERVER['SCRIPT_FILENAME']);
+
+        // PHAR at the project root → install right here (legacy docroot=project root).
+        static::assertSame(realpath($tmpDir), $recoveryManager->getInstallTargetDir());
+
+        $fs->remove($tmpDir);
+    }
+
+    #[BackupGlobals(true)]
+    public function testGetModeReturnsUpdateForExistingShopware(): void
+    {
+        $recoveryManager = new RecoveryManager();
+
+        $tmpDir = sys_get_temp_dir() . '/' . uniqid('shopware', true);
+        $fs = new Filesystem();
+        $this->prepareShopware($fs, $tmpDir);
+
+        static::assertSame('update', $recoveryManager->getMode());
+
+        $fs->remove($tmpDir);
+    }
+
+    #[BackupGlobals(true)]
+    public function testGetModeReturnsInstallWhenNoShopware(): void
+    {
+        $recoveryManager = new RecoveryManager();
+
+        $fs = new Filesystem();
+        $tmpDir = sys_get_temp_dir() . '/' . uniqid('shopware', true);
+        $fs->mkdir($tmpDir);
+        $_SERVER['SCRIPT_FILENAME'] = $tmpDir . '/shopware-installer.phar.php';
+        $fs->touch($_SERVER['SCRIPT_FILENAME']);
+
+        static::assertSame('install', $recoveryManager->getMode());
+
+        $fs->remove($tmpDir);
+    }
+
     public function testGetShopwareLocationReturnsFalseMissingShopware(): void
     {
         $recoveryManager = new RecoveryManager();

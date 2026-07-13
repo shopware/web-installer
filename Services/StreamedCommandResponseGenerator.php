@@ -43,6 +43,13 @@ class StreamedCommandResponseGenerator
         $process->start();
 
         return new StreamedResponse(function () use ($process, $finish): void {
+            // under a web SAPI, drop the output buffer so each chunk streams (flush() alone won't)
+            if (\PHP_SAPI !== 'cli') {
+                while (ob_get_level() > 0) {
+                    ob_end_flush();
+                }
+            }
+
             try {
                 foreach ($process->getIterator() as $item) {
                     \assert(\is_string($item));

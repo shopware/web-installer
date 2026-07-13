@@ -82,6 +82,14 @@ const logCard = document.getElementById('log-card');
 const logOutput = document.getElementById('log-output');
 const logError = document.getElementById('log-error');
 
+// auto-submit on language change; the hidden submit button is the no-JS fallback
+const languageSwitcher = document.getElementById('language');
+if (languageSwitcher && languageSwitcher.form) {
+    languageSwitcher.addEventListener('change', () => {
+        languageSwitcher.form.submit();
+    });
+}
+
 if (installButton) {
     installButton.onclick = async function () {
         logCard.style.removeProperty('display');
