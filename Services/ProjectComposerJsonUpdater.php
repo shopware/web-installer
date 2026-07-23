@@ -84,32 +84,34 @@ class ProjectComposerJsonUpdater
      */
     private function ignoreDompdfAdvisories(array $config): array
     {
-        /** @var list<string>|array<string, array{apply?: string, reason?: string}|string|null> $ignoredAdvisories */
-        $ignoredAdvisories = $config['config']['audit']['ignore'] ?? [];
+        /** @var list<string>|array<string, array{apply?: string, reason?: string}|string|null> $rawIgnoredAdvisories */
+        $rawIgnoredAdvisories = $config['config']['audit']['ignore'] ?? [];
+        /** @var array<string, array{apply?: string, reason?: string}|string|null> $normalizedIgnoredAdvisories */
+        $normalizedIgnoredAdvisories = [];
 
-        if (array_is_list($ignoredAdvisories)) {
-            $ignoredAdvisoryIds = $ignoredAdvisories;
-            $ignoredAdvisories = [];
-
-            foreach ($ignoredAdvisoryIds as $ignoredAdvisory) {
+        // Normalize input so advisories can always be looked up by array key.
+        if (array_is_list($rawIgnoredAdvisories)) {
+            foreach ($rawIgnoredAdvisories as $ignoredAdvisory) {
                 if (\is_string($ignoredAdvisory)) {
-                    $ignoredAdvisories[$ignoredAdvisory] = null;
+                    $normalizedIgnoredAdvisories[$ignoredAdvisory] = null;
                 }
             }
+        } else {
+            $normalizedIgnoredAdvisories = $rawIgnoredAdvisories;
         }
 
         foreach (self::DOMPDF_ADVISORIES as $advisory => $link) {
-            if (array_key_exists($advisory, $ignoredAdvisories)) {
+            if (array_key_exists($advisory, $normalizedIgnoredAdvisories)) {
                 continue;
             }
 
-            $ignoredAdvisories[$advisory] = [
+            $normalizedIgnoredAdvisories[$advisory] = [
                 'apply' => 'block',
                 'reason' => 'Shopware is not affected because only authenticated administration users can manipulate input rendered by dompdf. See ' . $link,
             ];
         }
 
-        $config['config']['audit']['ignore'] = $ignoredAdvisories;
+        $config['config']['audit']['ignore'] = $normalizedIgnoredAdvisories;
 
         return $config;
     }
