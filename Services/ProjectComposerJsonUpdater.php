@@ -14,13 +14,18 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class ProjectComposerJsonUpdater
 {
+    /**
+     * Shopware is not affected because only authenticated administration users can manipulate input rendered by dompdf.
+     *
+     * @var array<string, string>
+     */
     private const DOMPDF_ADVISORIES = [
-        'PKSA-cv56-2228-pzr6',
-        'PKSA-6r8f-nxsb-67bq',
-        'PKSA-gh7h-hhy4-byg7',
-        'PKSA-mwt3-h9tv-kx78',
-        'PKSA-hp6n-n4kz-21wk',
-        'PKSA-mckv-s5hg-868k',
+        'CVE-2026-59943' => 'https://github.com/advisories/GHSA-j8qw-6jw8-r297',
+        'CVE-2026-59942' => 'https://github.com/advisories/GHSA-f5gf-2cj8-52g2',
+        'CVE-2026-59941' => 'https://github.com/advisories/GHSA-8hg6-c449-896m',
+        'CVE-2026-56722' => 'https://github.com/advisories/GHSA-cx96-42px-69fm',
+        'CVE-2026-55555' => 'https://github.com/advisories/GHSA-7x2p-4jvh-6384',
+        'CVE-2026-55554' => 'https://github.com/advisories/GHSA-wvh6-f5jh-8gw4',
     ];
 
     public function __construct(private readonly HttpClientInterface $httpClient) {}
@@ -93,14 +98,14 @@ class ProjectComposerJsonUpdater
             }
         }
 
-        foreach (self::DOMPDF_ADVISORIES as $advisory) {
+        foreach (self::DOMPDF_ADVISORIES as $advisory => $link) {
             if (array_key_exists($advisory, $ignoredAdvisories)) {
                 continue;
             }
 
             $ignoredAdvisories[$advisory] = [
                 'apply' => 'block',
-                'reason' => 'Required to install or update Shopware versions that require dompdf below 3.1.6.',
+                'reason' => 'Shopware is not affected because only authenticated administration users can manipulate input rendered by dompdf. See ' . $link,
             ];
         }
 
