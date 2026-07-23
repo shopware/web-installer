@@ -14,6 +14,15 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class ProjectComposerJsonUpdater
 {
+    private const DOMPDF_ADVISORIES = [
+        'PKSA-cv56-2228-pzr6',
+        'PKSA-6r8f-nxsb-67bq',
+        'PKSA-gh7h-hhy4-byg7',
+        'PKSA-mwt3-h9tv-kx78',
+        'PKSA-hp6n-n4kz-21wk',
+        'PKSA-mckv-s5hg-868k',
+    ];
+
     public function __construct(private readonly HttpClientInterface $httpClient) {}
 
     public function update(string $file, string $latestVersion): void
@@ -58,8 +67,46 @@ class ProjectComposerJsonUpdater
 
         $composerJson = $this->ensureConflictsRepository($composerJson);
         $composerJson = $this->configureRepositories($composerJson);
+        $composerJson = $this->ignoreDompdfAdvisories($composerJson);
 
         file_put_contents($file, json_encode($composerJson, \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
+    }
+
+    /**
+     * @param array<mixed> $config
+     *
+     * @return array<mixed>
+     */
+    private function ignoreDompdfAdvisories(array $config): array
+    {
+        /** @var list<string>|array<string, array{apply?: string, reason?: string}|string|null> $ignoredAdvisories */
+        $ignoredAdvisories = $config['config']['audit']['ignore'] ?? [];
+
+        if (array_is_list($ignoredAdvisories)) {
+            $ignoredAdvisoryIds = $ignoredAdvisories;
+            $ignoredAdvisories = [];
+
+            foreach ($ignoredAdvisoryIds as $ignoredAdvisory) {
+                if (\is_string($ignoredAdvisory)) {
+                    $ignoredAdvisories[$ignoredAdvisory] = null;
+                }
+            }
+        }
+
+        foreach (self::DOMPDF_ADVISORIES as $advisory) {
+            if (array_key_exists($advisory, $ignoredAdvisories)) {
+                continue;
+            }
+
+            $ignoredAdvisories[$advisory] = [
+                'apply' => 'block',
+                'reason' => 'Required to install or update Shopware versions that require dompdf below 3.1.6.',
+            ];
+        }
+
+        $config['config']['audit']['ignore'] = $ignoredAdvisories;
+
+        return $config;
     }
 
     private function getVersion(string $latestVersion): string

@@ -43,7 +43,7 @@ class ProjectComposerJsonUpdaterTest extends TestCase
             '6.4.18.0'
         );
 
-        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+        $composerJson = $this->readComposerJsonWithoutDompdfAdvisories();
 
         static::assertSame(
             [
@@ -61,6 +61,47 @@ class ProjectComposerJsonUpdaterTest extends TestCase
         );
     }
 
+    public function testUpdateIgnoresDompdfAdvisoriesForDependencyBlocking(): void
+    {
+        file_put_contents($this->json, json_encode([
+            'require' => [
+                'shopware/core' => '1.2.3',
+            ],
+            'config' => [
+                'audit' => [
+                    'ignore' => ['GHSA-existing-advisory'],
+                ],
+            ],
+        ], \JSON_THROW_ON_ERROR));
+
+        (new ProjectComposerJsonUpdater(new MockHttpClient([$this->getEmptyVersionsResponse()])))->update(
+            $this->json,
+            '6.4.18.0'
+        );
+
+        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+        $ignoredAdvisories = $composerJson['config']['audit']['ignore'];
+
+        static::assertArrayHasKey('GHSA-existing-advisory', $ignoredAdvisories);
+        static::assertNull($ignoredAdvisories['GHSA-existing-advisory']);
+        unset($ignoredAdvisories['GHSA-existing-advisory']);
+
+        static::assertSame(array_fill_keys(
+            [
+                'PKSA-cv56-2228-pzr6',
+                'PKSA-6r8f-nxsb-67bq',
+                'PKSA-gh7h-hhy4-byg7',
+                'PKSA-mwt3-h9tv-kx78',
+                'PKSA-hp6n-n4kz-21wk',
+                'PKSA-mckv-s5hg-868k',
+            ],
+            [
+                'apply' => 'block',
+                'reason' => 'Required to install or update Shopware versions that require dompdf below 3.1.6.',
+            ]
+        ), $ignoredAdvisories);
+    }
+
     public function testUpdateWithRC(): void
     {
         (new ProjectComposerJsonUpdater(new MockHttpClient([$this->getEmptyVersionsResponse()])))->update(
@@ -68,7 +109,7 @@ class ProjectComposerJsonUpdaterTest extends TestCase
             '6.4.18.0-rc1'
         );
 
-        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+        $composerJson = $this->readComposerJsonWithoutDompdfAdvisories();
 
         static::assertSame(
             [
@@ -98,7 +139,7 @@ class ProjectComposerJsonUpdaterTest extends TestCase
 
         unset($_SERVER['SW_RECOVERY_NEXT_VERSION']);
 
-        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+        $composerJson = $this->readComposerJsonWithoutDompdfAdvisories();
 
         static::assertSame(
             [
@@ -129,7 +170,7 @@ class ProjectComposerJsonUpdaterTest extends TestCase
 
         unset($_SERVER['SW_RECOVERY_NEXT_VERSION']);
 
-        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+        $composerJson = $this->readComposerJsonWithoutDompdfAdvisories();
 
         static::assertSame(
             [
@@ -160,7 +201,7 @@ class ProjectComposerJsonUpdaterTest extends TestCase
 
         unset($_SERVER['SW_RECOVERY_NEXT_VERSION']);
 
-        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+        $composerJson = $this->readComposerJsonWithoutDompdfAdvisories();
 
         static::assertSame(
             [
@@ -193,7 +234,7 @@ class ProjectComposerJsonUpdaterTest extends TestCase
             '6.6.0.0'
         );
 
-        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+        $composerJson = $this->readComposerJsonWithoutDompdfAdvisories();
 
         static::assertSame(
             [
@@ -227,7 +268,7 @@ class ProjectComposerJsonUpdaterTest extends TestCase
             '6.7.0.0'
         );
 
-        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+        $composerJson = $this->readComposerJsonWithoutDompdfAdvisories();
 
         static::assertSame(
             [
@@ -260,7 +301,7 @@ class ProjectComposerJsonUpdaterTest extends TestCase
             '6.6.0.0'
         );
 
-        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+        $composerJson = $this->readComposerJsonWithoutDompdfAdvisories();
 
         static::assertSame(
             [
@@ -294,7 +335,7 @@ class ProjectComposerJsonUpdaterTest extends TestCase
             '6.2.0.0'
         );
 
-        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+        $composerJson = $this->readComposerJsonWithoutDompdfAdvisories();
 
         static::assertSame(
             [
@@ -328,7 +369,7 @@ class ProjectComposerJsonUpdaterTest extends TestCase
             '6.4.0.0'
         );
 
-        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+        $composerJson = $this->readComposerJsonWithoutDompdfAdvisories();
 
         static::assertSame(
             [
@@ -369,7 +410,7 @@ class ProjectComposerJsonUpdaterTest extends TestCase
 
         unset($_SERVER['SW_RECOVERY_NEXT_VERSION']);
 
-        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+        $composerJson = $this->readComposerJsonWithoutDompdfAdvisories();
 
         static::assertSame(
             [
@@ -496,6 +537,26 @@ class ProjectComposerJsonUpdaterTest extends TestCase
             ],
             $composerJson['repositories']
         );
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function readComposerJsonWithoutDompdfAdvisories(): array
+    {
+        $composerJson = json_decode((string) file_get_contents($this->json), true, 512, \JSON_THROW_ON_ERROR);
+
+        unset($composerJson['config']['audit']['ignore']);
+
+        if ($composerJson['config']['audit'] === []) {
+            unset($composerJson['config']['audit']);
+        }
+
+        if ($composerJson['config'] === []) {
+            unset($composerJson['config']);
+        }
+
+        return $composerJson;
     }
 
     private function getEmptyVersionsResponse(): MockResponse
