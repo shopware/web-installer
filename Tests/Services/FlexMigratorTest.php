@@ -23,6 +23,7 @@ class FlexMigratorTest extends TestCase
         $fs->mkdir($tmpDir);
 
         $fs->touch($tmpDir . '/Dockerfile');
+        $fs->touch($tmpDir . '/public/index.php');
         $fs->mkdir($tmpDir . '/.github/workflows');
         $fs->touch($tmpDir . '/.github/workflows/build.yml');
 
@@ -32,6 +33,7 @@ class FlexMigratorTest extends TestCase
 
         static::assertFileDoesNotExist($tmpDir . '/Dockerfile');
         static::assertFileDoesNotExist($tmpDir . '/.github/workflows/build.yml');
+        static::assertFileExists($tmpDir . '/public/index.php');
 
         $fs->remove($tmpDir);
     }

@@ -25,7 +25,6 @@ class FlexMigrator
         'phpstan.neon',
         'phpunit.xml.dist',
         'psalm.xml',
-        'public/index.php',
         'src/TestBootstrap.php',
         'var/plugins.json',
     ];
