@@ -1,7 +1,9 @@
 > [!IMPORTANT]
 > **The recommended way to install Shopware is [Shopware CLI](https://github.com/shopware/shopware-cli)**, which provides
-> workflows for installing, managing, and developing Shopware projects and terminal user interface workflows.
-> Shopware CLI is our primary installation method and the focus of our ongoing development.
+> workflows for installing, managing, and developing Shopware projects, including an interactive terminal interface. See the [installation guide](https://developer.shopware.com/)
+> to get started.
+> 
+> Shopware CLI is our primary installation method and the focus of our ongoing development. Among other features, it provides an [upgrade wizard](https://developer.shopware.com/docs/products/tools/cli/project-commands/upgrade.html) for Shopware projects.
 >
 > The web installer will continue to be available, but will receive limited development going forward.
 
