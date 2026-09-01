@@ -32,6 +32,10 @@
             "options": {
                 "symlink": true
             }
+        },
+        {
+            "type": "composer",
+            "url": "https://shopware.github.io/conflicts/"
         }
     ],
     "minimum-stability": "RC",

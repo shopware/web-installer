@@ -40,10 +40,22 @@ class InstallerLocaleListener
 
         // language is changed
         $language = $request->query->getString('language');
-        if ($language !== '' && \in_array($language, $this->installerLanguages, true)) {
-            $session->set('language', $language);
+        if ($language !== '') {
+            if (\in_array($language, $this->installerLanguages, true)) {
+                $session->set('language', $language);
 
-            return $language;
+                return $language;
+            }
+
+            // no exact match: fall back to the base language (en-GB -> en) if supported
+            if (str_contains($language, '-')) {
+                $baseLanguage = explode('-', $language, 2)[0];
+                if (\in_array($baseLanguage, $this->installerLanguages, true)) {
+                    $session->set('language', $baseLanguage);
+
+                    return $baseLanguage;
+                }
+            }
         }
 
         // language was already set

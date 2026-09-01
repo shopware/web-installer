@@ -14,6 +14,20 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class ProjectComposerJsonUpdater
 {
+    /**
+     * Shopware is not affected because only authenticated administration users can manipulate input rendered by dompdf.
+     *
+     * @var array<string, string>
+     */
+    private const DOMPDF_ADVISORIES = [
+        'CVE-2026-59943' => 'https://github.com/advisories/GHSA-j8qw-6jw8-r297',
+        'CVE-2026-59942' => 'https://github.com/advisories/GHSA-f5gf-2cj8-52g2',
+        'CVE-2026-59941' => 'https://github.com/advisories/GHSA-8hg6-c449-896m',
+        'CVE-2026-56722' => 'https://github.com/advisories/GHSA-cx96-42px-69fm',
+        'CVE-2026-55555' => 'https://github.com/advisories/GHSA-7x2p-4jvh-6384',
+        'CVE-2026-55554' => 'https://github.com/advisories/GHSA-wvh6-f5jh-8gw4',
+    ];
+
     public function __construct(private readonly HttpClientInterface $httpClient) {}
 
     public function update(string $file, string $latestVersion): void
@@ -56,9 +70,50 @@ class ProjectComposerJsonUpdater
             $composerJson['require'][$shopwarePackage] = $version;
         }
 
+        $composerJson = $this->ensureConflictsRepository($composerJson);
         $composerJson = $this->configureRepositories($composerJson);
+        $composerJson = $this->ignoreDompdfAdvisories($composerJson);
 
         file_put_contents($file, json_encode($composerJson, \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
+    }
+
+    /**
+     * @param array<mixed> $config
+     *
+     * @return array<mixed>
+     */
+    private function ignoreDompdfAdvisories(array $config): array
+    {
+        /** @var list<string>|array<string, array{apply?: string, reason?: string}|string|null> $rawIgnoredAdvisories */
+        $rawIgnoredAdvisories = $config['config']['audit']['ignore'] ?? [];
+        /** @var array<string, array{apply?: string, reason?: string}|string|null> $normalizedIgnoredAdvisories */
+        $normalizedIgnoredAdvisories = [];
+
+        // Normalize input so advisories can always be looked up by array key.
+        if (array_is_list($rawIgnoredAdvisories)) {
+            foreach ($rawIgnoredAdvisories as $ignoredAdvisory) {
+                if (\is_string($ignoredAdvisory)) {
+                    $normalizedIgnoredAdvisories[$ignoredAdvisory] = null;
+                }
+            }
+        } else {
+            $normalizedIgnoredAdvisories = $rawIgnoredAdvisories;
+        }
+
+        foreach (self::DOMPDF_ADVISORIES as $advisory => $link) {
+            if (array_key_exists($advisory, $normalizedIgnoredAdvisories)) {
+                continue;
+            }
+
+            $normalizedIgnoredAdvisories[$advisory] = [
+                'apply' => 'block',
+                'reason' => 'Shopware is not affected because only authenticated administration users can manipulate input rendered by dompdf. See ' . $link,
+            ];
+        }
+
+        $config['config']['audit']['ignore'] = $normalizedIgnoredAdvisories;
+
+        return $config;
     }
 
     private function getVersion(string $latestVersion): string
@@ -81,6 +136,40 @@ class ProjectComposerJsonUpdater
     }
 
     /**
+     * Ensures the shopware/conflicts composer repository is registered so the
+     * shopware/conflicts package can be resolved during install and update.
+     *
+     * Existing `repositories` layouts are preserved: an indexed list stays a
+     * list and a keyed map stays a map. If the conflicts repository is already
+     * present (matched by URL) it is left untouched.
+     *
+     * @see https://github.com/shopware/conflicts/blob/main/USAGES.md
+     *
+     * @param array<mixed> $config
+     *
+     * @return array<mixed>
+     */
+    private function ensureConflictsRepository(array $config): array
+    {
+        $conflictsRepository = [
+            'type' => 'composer',
+            'url' => 'https://shopware.github.io/conflicts/',
+        ];
+
+        if ($this->hasRepository($config['repositories'] ?? [], $conflictsRepository['url'])) {
+            return $config;
+        }
+
+        $config['repositories'] = $this->addRepository(
+            $config['repositories'] ?? [],
+            'shopware-conflicts',
+            $conflictsRepository
+        );
+
+        return $config;
+    }
+
+    /**
      * @param array<mixed> $config
      *
      * @return array<mixed>
@@ -95,10 +184,56 @@ class ProjectComposerJsonUpdater
                 return $config;
             }
 
-            $config['repositories']['recovery'] = $repo;
+            $config['repositories'] = $this->addRepository(
+                $config['repositories'] ?? [],
+                'recovery',
+                $repo
+            );
         }
 
         return $config;
+    }
+
+    /**
+     * Returns true when a repository with the given URL is already registered,
+     * no matter whether `repositories` is an indexed list or a keyed map.
+     *
+     * @param array<mixed> $repositories
+     */
+    private function hasRepository(array $repositories, string $url): bool
+    {
+        foreach ($repositories as $repository) {
+            if (!\is_array($repository)) {
+                continue;
+            }
+
+            if (($repository['url'] ?? null) === $url) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Adds a repository entry while preserving the existing `repositories`
+     * structure: an indexed list stays a list (entry appended), a keyed map
+     * stays a map (entry added under `$name`).
+     *
+     * @param array<int|string, mixed>              $repositories
+     * @param array{type: string, url: string, ...} $repository
+     *
+     * @return array<int|string, mixed>
+     */
+    private function addRepository(array $repositories, string $name, array $repository): array
+    {
+        if (array_is_list($repositories)) {
+            $repositories[] = $repository;
+        } else {
+            $repositories[$name] = $repository;
+        }
+
+        return $repositories;
     }
 
     private function getConflictMinVersion(string $shopwareVersion): ?string

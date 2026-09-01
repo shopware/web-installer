@@ -36,7 +36,6 @@
                                 id="language"
                                 name="language"
                                 class="language-selection"
-                                onchange="this.form.submit();"
                         >
                             {% for baseTag, language in supportedLanguages %}
                                 <option
@@ -48,6 +47,7 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <button type="submit" class="visually-hidden">{{ 'shopware.update.steps.start.languageSelection'|trans }}</button>
                 </form>
             </div>
         </div>
@@ -55,45 +55,13 @@
 
     <div class="page--wrap">
         <div class="content--wrapper">
-            {% set navigationPosition = app.request.attributes.get('step') %}
-
             <nav class="navigation--main">
                 <ul class="navigation--list">
-                    <li class="navigation--entry{% if navigationPosition == '0' %} is--active{% endif %}">
-                        <span class="navigation--link">{{ 'shopware.update.navigation.start'|trans }}</span>
-                    </li>
-
-                    <li class="navigation--entry{% if navigationPosition == '1' %} is--active{% endif %}">
-                        <span class="navigation--link">{{ 'shopware.update.navigation.configure_php'|trans }}</span>
-                    </li>
-
-                    <li class="navigation--entry{% if navigationPosition == '2' %} is--active{% endif %}">
-                        <span class="navigation--link">{{ 'shopware.update.navigation.download'|trans }}</span>
-                    </li>
-
-                    <li class="navigation--entry{% if navigationPosition == '3' %} is--active{% endif %}">
-                        <span class="navigation--link">{{ 'shopware.update.navigation.requirements'|trans }}</span>
-                    </li>
-
-                    <li class="navigation--entry{% if navigationPosition == '3' %} is--active{% endif %}">
-                        <span class="navigation--link">{{ 'shopware.update.navigation.license'|trans }}</span>
-                    </li>
-
-                    <li class="navigation--entry{% if navigationPosition == '3' %} is--active{% endif %}">
-                        <span class="navigation--link">{{ 'shopware.update.navigation.database-configuration'|trans }}</span>
-                    </li>
-
-                    <li class="navigation--entry{% if navigationPosition == '3' %} is--active{% endif %}">
-                        <span class="navigation--link">{{ 'shopware.update.navigation.database-import'|trans }}</span>
-                    </li>
-
-                    <li class="navigation--entry{% if navigationPosition == '3' %} is--active{% endif %}">
-                        <span class="navigation--link">{{ 'shopware.update.navigation.configuration'|trans }}</span>
-                    </li>
-
-                    <li class="navigation--entry{% if navigationPosition == '3' %} is--active{% endif %}">
-                        <span class="navigation--link">{{ 'shopware.update.navigation.finish'|trans }}</span>
-                    </li>
+                    {% for step in installer_steps() %}
+                        <li class="navigation--entry{% if step.active %} is--active{% endif %}"{% if step.active %} aria-current="step"{% endif %}>
+                            <span class="navigation--link">{{ ('shopware.update.navigation.' ~ step.key)|trans }}</span>
+                        </li>
+                    {% endfor %}
                 </ul>
             </nav>
             <section class="content--main">

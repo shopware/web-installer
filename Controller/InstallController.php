@@ -54,7 +54,7 @@ class InstallController extends AbstractController
             'shopware_version' => $shopwareVersion,
         ]);
 
-        $folder = $this->recoveryManager->getProjectDir();
+        $folder = $this->recoveryManager->getInstallTargetDir();
 
         $fs = new Filesystem();
         $fs->copy(\dirname(__DIR__) . '/Resources/install-template/composer.json', $folder . '/composer.json');
@@ -88,7 +88,16 @@ class InstallController extends AbstractController
                     $queryParams['language'] = rawurlencode($locale);
                 }
 
-                $data['newLocation'] = $request->getBasePath() . '/public/' . \http_build_query($queryParams);
+                // in a PHAR, getBasePath() is the phar's own URL path; strip it to the containing directory
+                $base = \rtrim(\str_replace('\\', '/', \dirname($request->getBasePath())), '/');
+                if ($base === '.') {
+                    $base = '';
+                }
+
+                // phar in public/ (docroot=public/) → shop at "/"; phar at project root → shop in "public/"
+                $shopPath = basename($this->recoveryManager->getProjectDir()) === 'public' ? '/' : '/public/';
+
+                $data['newLocation'] = $base . $shopPath . '?' . \http_build_query($queryParams);
             }
 
             echo json_encode($data);
@@ -114,7 +123,7 @@ class InstallController extends AbstractController
     #[Route('/install/_cleanup', name: 'install_cleanup', methods: ['POST'])]
     public function cleanup(): StreamedResponse
     {
-        $folder = $this->recoveryManager->getProjectDir();
+        $folder = $this->recoveryManager->getInstallTargetDir();
 
         $fs = new Filesystem();
         $htaccessFile = $folder . '/public/.htaccess';

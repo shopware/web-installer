@@ -30,6 +30,7 @@ class InstallerLocaleListenerTest extends TestCase
             'en-US' => ['id' => 'en-US', 'label' => 'English (US)'],
             'en'    => ['id' => 'en-GB', 'label' => 'English (UK)'],
             'de'    => ['id' => 'de-DE', 'label' => 'Deutsch'],
+            'es-ES' => ['id' => 'es-ES', 'label' => 'Español'],
         ]);
 
         $listener = new InstallerLocaleListener($languageProvider);
@@ -102,6 +103,38 @@ class InstallerLocaleListenerTest extends TestCase
         yield 'read language from session' => [
             $request,
             'de',
+        ];
+
+        $request = new Request(['language' => 'en-GB']);
+        $request->setSession(new Session(new MockArraySessionStorage()));
+
+        yield 'strips region tag to a supported base language' => [
+            $request,
+            'en',
+        ];
+
+        $request = new Request(['language' => 'en-US']);
+        $request->setSession(new Session(new MockArraySessionStorage()));
+
+        yield 'prefers an exact region match over the stripped base language' => [
+            $request,
+            'en-US',
+        ];
+
+        $request = new Request(['language' => 'es-ES']);
+        $request->setSession(new Session(new MockArraySessionStorage()));
+
+        yield 'matches a region-only language by its exact tag' => [
+            $request,
+            'es-ES',
+        ];
+
+        $request = new Request(['language' => 'es-MX']);
+        $request->setSession(new Session(new MockArraySessionStorage()));
+
+        yield 'region-only language is not mapped from a different region and falls back' => [
+            $request,
+            'en-US',
         ];
     }
 
