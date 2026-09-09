@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shopware\WebInstaller\Controller;
 
 use Shopware\WebInstaller\Services\CleanupFiles;
+use Shopware\WebInstaller\Services\EnvVarPreserver;
 use Shopware\WebInstaller\Services\FileBackup;
 use Shopware\WebInstaller\Services\FlexMigrator;
 use Shopware\WebInstaller\Services\LanguageProvider;
@@ -135,6 +136,11 @@ class UpdateController extends AbstractController
 
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
+        // the recipes rewrite the .env file, keep project specific variables like COMPOSE_PROJECT_NAME
+        $envPath = $shopwarePath . '/.env';
+        $envVarPreserver = new EnvVarPreserver();
+        $preservedEnvVars = $envVarPreserver->collect($envPath);
+
         return $this->streamedCommandResponseGenerator->runJSON([
             $this->recoveryManager->getPHPBinary($request),
             '-dmemory_limit=1G',
@@ -148,7 +154,9 @@ class UpdateController extends AbstractController
             '--no-interaction',
             '--no-ansi',
             '-v',
-        ]);
+        ], static function () use ($envVarPreserver, $envPath, $preservedEnvVars): void {
+            $envVarPreserver->restore($envPath, $preservedEnvVars);
+        });
     }
 
     #[Route('/update/_prepare', name: 'update_prepare', methods: ['POST'])]

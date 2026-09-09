@@ -10,6 +10,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Shopware\WebInstaller\Controller\UpdateController;
+use Shopware\WebInstaller\Services\EnvVarPreserver;
 use Shopware\WebInstaller\Services\FlexMigrator;
 use Shopware\WebInstaller\Services\LanguageProvider;
 use Shopware\WebInstaller\Services\ProjectComposerJsonUpdater;
@@ -24,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Router;
 use Twig\Environment;
 
@@ -32,6 +34,7 @@ use Twig\Environment;
  */
 #[CoversClass(UpdateController::class)]
 #[CoversClass(ProjectComposerJsonUpdater::class)]
+#[CoversClass(EnvVarPreserver::class)]
 class UpdateControllerTest extends TestCase
 {
     public function testRedirectWhenNotInstalled(): void
@@ -435,10 +438,16 @@ class UpdateControllerTest extends TestCase
 
         $tmpDir = sys_get_temp_dir() . '/' . uniqid('test', true);
 
+        $fs = new Filesystem();
+        $fs->mkdir($tmpDir);
+        $fs->dumpFile($tmpDir . '/.env', "APP_ENV=prod\nCOMPOSE_PROJECT_NAME=my-shop\n");
+
         $recoveryManager->method('getShopwareLocation')->willReturn($tmpDir);
         $recoveryManager->method('getCurrentShopwareVersion')->willReturn('6.4.17.0');
         $recoveryManager->method('getPHPBinary')->willReturn('/usr/bin/php');
         $recoveryManager->method('getBinary')->willReturn('/var/www/shopware-installer.phar.php');
+
+        $finish = null;
 
         $responseGenerator = $this->createMock(StreamedCommandResponseGenerator::class);
         $responseGenerator
@@ -457,8 +466,12 @@ class UpdateControllerTest extends TestCase
                 '--no-interaction',
                 '--no-ansi',
                 '-v',
-            ])
-            ->willReturn(new StreamedResponse());
+            ], static::isType('callable'))
+            ->willReturnCallback(static function (array $params, ?callable $callback = null) use (&$finish): StreamedResponse {
+                $finish = $callback;
+
+                return new StreamedResponse();
+            });
 
         $controller = new UpdateController(
             $recoveryManager,
@@ -476,6 +489,19 @@ class UpdateControllerTest extends TestCase
         $response = $controller->resetConfig($request);
 
         static::assertInstanceOf(StreamedResponse::class, $response);
+
+        // the recipes reset rewrites the .env file, the callback has to restore the preserved variables
+        $fs->dumpFile($tmpDir . '/.env', "APP_ENV=prod\n");
+
+        static::assertIsCallable($finish);
+        $finish(new Process(['true']));
+
+        static::assertSame(
+            "APP_ENV=prod\nCOMPOSE_PROJECT_NAME=my-shop\n",
+            (string) file_get_contents($tmpDir . '/.env')
+        );
+
+        $fs->remove($tmpDir);
     }
 
     public function getReleaseInfoProvider(): ReleaseInfoProvider&MockObject
