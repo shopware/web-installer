@@ -35,6 +35,7 @@ class UpdateController extends AbstractController
         private readonly ProjectComposerJsonUpdater $projectComposerJsonUpdater,
         private readonly LanguageProvider $languageProvider,
         private readonly TrackingService $trackingService,
+        private readonly EnvVarPreserver $envVarPreserver = new EnvVarPreserver(),
     ) {}
 
     #[Route('/update', name: 'update', defaults: ['step' => 2], methods: ['GET'])]
@@ -138,8 +139,7 @@ class UpdateController extends AbstractController
 
         // the recipes rewrite the .env file, keep project specific variables like COMPOSE_PROJECT_NAME
         $envPath = $shopwarePath . '/.env';
-        $envVarPreserver = new EnvVarPreserver();
-        $preservedEnvVars = $envVarPreserver->collect($envPath);
+        $preservedEnvVars = $this->envVarPreserver->collect($envPath);
 
         return $this->streamedCommandResponseGenerator->runJSON([
             $this->recoveryManager->getPHPBinary($request),
@@ -154,8 +154,8 @@ class UpdateController extends AbstractController
             '--no-interaction',
             '--no-ansi',
             '-v',
-        ], static function () use ($envVarPreserver, $envPath, $preservedEnvVars): void {
-            $envVarPreserver->restore($envPath, $preservedEnvVars);
+        ], function () use ($envPath, $preservedEnvVars): void {
+            $this->envVarPreserver->restore($envPath, $preservedEnvVars);
         });
     }
 

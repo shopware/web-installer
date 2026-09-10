@@ -25,7 +25,7 @@ class EnvVarPreserverTest extends TestCase
     {
         $this->tmpDir = sys_get_temp_dir() . '/' . uniqid('env-preserver', true);
         $this->envPath = $this->tmpDir . '/.env';
-        $this->preserver = new EnvVarPreserver();
+        $this->preserver = new EnvVarPreserver(new Filesystem());
 
         (new Filesystem())->mkdir($this->tmpDir);
     }

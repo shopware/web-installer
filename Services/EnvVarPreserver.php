@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Services;
 
+use Symfony\Component\Filesystem\Filesystem;
+
 /**
  * Preserves project specific env variables which would be lost when the
  * flex recipes rewrite the .env file (composer symfony:recipes:install --reset).
@@ -19,12 +21,14 @@ class EnvVarPreserver
         'COMPOSE_PROJECT_NAME',
     ];
 
+    public function __construct(private readonly Filesystem $filesystem = new Filesystem()) {}
+
     /**
      * @return array<string, string> the raw values (as written in the file) of the preserved variables
      */
     public function collect(string $envPath): array
     {
-        if (!is_file($envPath)) {
+        if (!$this->filesystem->exists($envPath)) {
             return [];
         }
 
@@ -51,7 +55,7 @@ class EnvVarPreserver
      */
     public function restore(string $envPath, array $values): void
     {
-        if ($values === [] || !is_file($envPath)) {
+        if ($values === [] || !$this->filesystem->exists($envPath)) {
             return;
         }
 
@@ -74,7 +78,7 @@ class EnvVarPreserver
             $content .= $line . "\n";
         }
 
-        file_put_contents($envPath, $content);
+        $this->filesystem->dumpFile($envPath, $content);
     }
 
     private function buildPattern(string $name): string
