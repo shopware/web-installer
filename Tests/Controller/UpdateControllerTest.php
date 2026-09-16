@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Shopware\WebInstaller\Controller\UpdateController;
 use Shopware\WebInstaller\Services\EnvVarPreserver;
+use Shopware\WebInstaller\Services\Filesystem;
 use Shopware\WebInstaller\Services\FlexMigrator;
 use Shopware\WebInstaller\Services\LanguageProvider;
 use Shopware\WebInstaller\Services\ProjectComposerJsonUpdater;
@@ -19,7 +20,6 @@ use Shopware\WebInstaller\Services\ReleaseInfoProvider;
 use Shopware\WebInstaller\Services\StreamedCommandResponseGenerator;
 use Shopware\WebInstaller\Services\TrackingService;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -498,7 +498,7 @@ class UpdateControllerTest extends TestCase
 
         static::assertSame(
             "APP_ENV=prod\nCOMPOSE_PROJECT_NAME=my-shop\n",
-            (string) file_get_contents($tmpDir . '/.env')
+            $fs->readContents($tmpDir . '/.env')
         );
 
         $fs->remove($tmpDir);

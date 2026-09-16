@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Shopware\WebInstaller\Tests\Services;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\WebInstaller\Services\EnvVarPreserver;
-use Symfony\Component\Filesystem\Filesystem;
+use Shopware\WebInstaller\Services\Filesystem;
 
 /**
  * @internal
@@ -15,122 +16,124 @@ use Symfony\Component\Filesystem\Filesystem;
 #[CoversClass(EnvVarPreserver::class)]
 class EnvVarPreserverTest extends TestCase
 {
-    private string $tmpDir;
+    private const ENV_PATH = '/var/www/shop/.env';
 
-    private string $envPath;
+    private Filesystem&MockObject $filesystem;
 
     private EnvVarPreserver $preserver;
 
     protected function setUp(): void
     {
-        $this->tmpDir = sys_get_temp_dir() . '/' . uniqid('env-preserver', true);
-        $this->envPath = $this->tmpDir . '/.env';
-        $this->preserver = new EnvVarPreserver(new Filesystem());
-
-        (new Filesystem())->mkdir($this->tmpDir);
-    }
-
-    protected function tearDown(): void
-    {
-        (new Filesystem())->remove($this->tmpDir);
+        $this->filesystem = $this->createMock(Filesystem::class);
+        $this->preserver = new EnvVarPreserver($this->filesystem);
     }
 
     public function testCollectMissingFile(): void
     {
-        static::assertSame([], $this->preserver->collect($this->envPath));
+        $this->filesystem->method('exists')->with(self::ENV_PATH)->willReturn(false);
+        $this->filesystem->expects($this->never())->method('readContents');
+
+        static::assertSame([], $this->preserver->collect(self::ENV_PATH));
     }
 
     public function testCollectWithoutPreservedVars(): void
     {
-        file_put_contents($this->envPath, "APP_ENV=prod\n");
+        $this->givenEnvFile("APP_ENV=prod\n");
 
-        static::assertSame([], $this->preserver->collect($this->envPath));
+        static::assertSame([], $this->preserver->collect(self::ENV_PATH));
     }
 
     public function testCollectIgnoresEmptyValue(): void
     {
-        file_put_contents($this->envPath, "COMPOSE_PROJECT_NAME=\n");
+        $this->givenEnvFile("COMPOSE_PROJECT_NAME=\n");
 
-        static::assertSame([], $this->preserver->collect($this->envPath));
+        static::assertSame([], $this->preserver->collect(self::ENV_PATH));
     }
 
     public function testCollect(): void
     {
-        file_put_contents($this->envPath, "APP_ENV=prod\nCOMPOSE_PROJECT_NAME=my-shop \nAPP_URL=http://localhost\n");
+        $this->givenEnvFile("APP_ENV=prod\nCOMPOSE_PROJECT_NAME=my-shop \nAPP_URL=http://localhost\n");
 
-        static::assertSame(['COMPOSE_PROJECT_NAME' => 'my-shop'], $this->preserver->collect($this->envPath));
+        static::assertSame(['COMPOSE_PROJECT_NAME' => 'my-shop'], $this->preserver->collect(self::ENV_PATH));
     }
 
     public function testCollectExported(): void
     {
-        file_put_contents($this->envPath, "export COMPOSE_PROJECT_NAME='my-shop'\n");
+        $this->givenEnvFile("export COMPOSE_PROJECT_NAME='my-shop'\n");
 
-        static::assertSame(['COMPOSE_PROJECT_NAME' => "'my-shop'"], $this->preserver->collect($this->envPath));
+        static::assertSame(['COMPOSE_PROJECT_NAME' => "'my-shop'"], $this->preserver->collect(self::ENV_PATH));
     }
 
     public function testRestoreAppendsVar(): void
     {
-        file_put_contents($this->envPath, "APP_ENV=prod\n");
+        $this->givenEnvFile("APP_ENV=prod\n");
+        $this->expectEnvFileWritten("APP_ENV=prod\nCOMPOSE_PROJECT_NAME=my-shop\n");
 
-        $this->preserver->restore($this->envPath, ['COMPOSE_PROJECT_NAME' => 'my-shop']);
-
-        static::assertSame("APP_ENV=prod\nCOMPOSE_PROJECT_NAME=my-shop\n", (string) file_get_contents($this->envPath));
+        $this->preserver->restore(self::ENV_PATH, ['COMPOSE_PROJECT_NAME' => 'my-shop']);
     }
 
     public function testRestoreAppendsVarWithoutTrailingNewline(): void
     {
-        file_put_contents($this->envPath, 'APP_ENV=prod');
+        $this->givenEnvFile('APP_ENV=prod');
+        $this->expectEnvFileWritten("APP_ENV=prod\nCOMPOSE_PROJECT_NAME=my-shop\n");
 
-        $this->preserver->restore($this->envPath, ['COMPOSE_PROJECT_NAME' => 'my-shop']);
-
-        static::assertSame("APP_ENV=prod\nCOMPOSE_PROJECT_NAME=my-shop\n", (string) file_get_contents($this->envPath));
+        $this->preserver->restore(self::ENV_PATH, ['COMPOSE_PROJECT_NAME' => 'my-shop']);
     }
 
     public function testRestoreOverwritesExistingVar(): void
     {
-        file_put_contents($this->envPath, "COMPOSE_PROJECT_NAME=shopware\nAPP_ENV=prod\n");
+        $this->givenEnvFile("COMPOSE_PROJECT_NAME=shopware\nAPP_ENV=prod\n");
+        $this->expectEnvFileWritten("COMPOSE_PROJECT_NAME=my-shop\nAPP_ENV=prod\n");
 
-        $this->preserver->restore($this->envPath, ['COMPOSE_PROJECT_NAME' => 'my-shop']);
-
-        static::assertSame("COMPOSE_PROJECT_NAME=my-shop\nAPP_ENV=prod\n", (string) file_get_contents($this->envPath));
+        $this->preserver->restore(self::ENV_PATH, ['COMPOSE_PROJECT_NAME' => 'my-shop']);
     }
 
     public function testRestoreKeepsSpecialCharacters(): void
     {
-        file_put_contents($this->envPath, "COMPOSE_PROJECT_NAME=shopware\n");
+        $this->givenEnvFile("COMPOSE_PROJECT_NAME=shopware\n");
+        $this->expectEnvFileWritten("COMPOSE_PROJECT_NAME=my\$0\\shop\n");
 
-        $this->preserver->restore($this->envPath, ['COMPOSE_PROJECT_NAME' => 'my$0\\shop']);
-
-        static::assertSame("COMPOSE_PROJECT_NAME=my\$0\\shop\n", (string) file_get_contents($this->envPath));
+        $this->preserver->restore(self::ENV_PATH, ['COMPOSE_PROJECT_NAME' => 'my$0\\shop']);
     }
 
     public function testRestoreWithoutValues(): void
     {
-        file_put_contents($this->envPath, "APP_ENV=prod\n");
+        $this->filesystem->expects($this->never())->method('readContents');
+        $this->filesystem->expects($this->never())->method('dumpFile');
 
-        $this->preserver->restore($this->envPath, []);
-
-        static::assertSame("APP_ENV=prod\n", (string) file_get_contents($this->envPath));
+        $this->preserver->restore(self::ENV_PATH, []);
     }
 
     public function testRestoreMissingFile(): void
     {
-        $this->preserver->restore($this->envPath, ['COMPOSE_PROJECT_NAME' => 'my-shop']);
+        $this->filesystem->method('exists')->with(self::ENV_PATH)->willReturn(false);
+        $this->filesystem->expects($this->never())->method('readContents');
+        $this->filesystem->expects($this->never())->method('dumpFile');
 
-        static::assertFileDoesNotExist($this->envPath);
+        $this->preserver->restore(self::ENV_PATH, ['COMPOSE_PROJECT_NAME' => 'my-shop']);
     }
 
     public function testCollectAndRestoreRoundTrip(): void
     {
-        file_put_contents($this->envPath, "APP_ENV=prod\nCOMPOSE_PROJECT_NAME=my-shop\n");
+        $this->filesystem->method('exists')->with(self::ENV_PATH)->willReturn(true);
+        // the recipes reset rewrites the file between collect and restore
+        $this->filesystem
+            ->method('readContents')
+            ->with(self::ENV_PATH)
+            ->willReturnOnConsecutiveCalls("APP_ENV=prod\nCOMPOSE_PROJECT_NAME=my-shop\n", "APP_ENV=prod\n");
+        $this->expectEnvFileWritten("APP_ENV=prod\nCOMPOSE_PROJECT_NAME=my-shop\n");
 
-        $values = $this->preserver->collect($this->envPath);
+        $this->preserver->restore(self::ENV_PATH, $this->preserver->collect(self::ENV_PATH));
+    }
 
-        // the recipes reset rewrites the file
-        file_put_contents($this->envPath, "APP_ENV=prod\n");
+    private function givenEnvFile(string $content): void
+    {
+        $this->filesystem->method('exists')->with(self::ENV_PATH)->willReturn(true);
+        $this->filesystem->method('readContents')->with(self::ENV_PATH)->willReturn($content);
+    }
 
-        $this->preserver->restore($this->envPath, $values);
-
-        static::assertSame("APP_ENV=prod\nCOMPOSE_PROJECT_NAME=my-shop\n", (string) file_get_contents($this->envPath));
+    private function expectEnvFileWritten(string $content): void
+    {
+        $this->filesystem->expects($this->once())->method('dumpFile')->with(self::ENV_PATH, $content);
     }
 }
