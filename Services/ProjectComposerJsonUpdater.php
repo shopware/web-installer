@@ -247,7 +247,7 @@ class ProjectComposerJsonUpdater
             return null;
         }
 
-        /** @var array{packages: array{"shopware/conflicts": array{version: string, require: array{"shopware/core": string}}[]}} $data */
+        /** @var array{packages: array{"shopware/conflicts": list<array{version: string, require: array{"shopware/core": string}}>}} $data */
         $data = $this->httpClient->request('GET', 'https://repo.packagist.org/p2/shopware/conflicts.json')->toArray();
 
         $data['packages']['shopware/conflicts'] = MetadataMinifier::expand($data['packages']['shopware/conflicts']);

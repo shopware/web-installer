@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Shopware\WebInstaller\Services;
 
+use Symfony\Component\Filesystem\Filesystem;
+
 /**
  * Preserves project specific env variables which would be lost when the
  * flex recipes rewrite the .env file (composer symfony:recipes:install --reset).
@@ -30,7 +32,7 @@ class EnvVarPreserver
             return [];
         }
 
-        $content = $this->filesystem->readContents($envPath);
+        $content = $this->filesystem->readFile($envPath);
         $values = [];
 
         foreach (self::PRESERVED_VARS as $name) {
@@ -57,7 +59,7 @@ class EnvVarPreserver
             return;
         }
 
-        $content = $this->filesystem->readContents($envPath);
+        $content = $this->filesystem->readFile($envPath);
 
         foreach ($values as $name => $value) {
             $line = $name . '=' . $value;

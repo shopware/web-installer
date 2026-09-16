@@ -3,7 +3,7 @@
     "license": "proprietary",
     "type": "project",
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-ctype": "*",
         "ext-curl": "*",
         "ext-dom": "*",
@@ -11,20 +11,20 @@
         "composer/composer": "^2.9",
         "composer/metadata-minifier": "^1.0",
         "composer/semver": "^3.4",
-        "symfony/console": "6.4.*",
-        "symfony/dependency-injection": "6.4.*",
-        "symfony/dotenv": "6.4.*",
-        "symfony/event-dispatcher": "6.4.*",
-        "symfony/filesystem": "6.4.*",
-        "symfony/framework-bundle": "6.4.*",
-        "symfony/http-client": "6.4.*",
+        "symfony/console": "7.4.*",
+        "symfony/dependency-injection": "7.4.*",
+        "symfony/dotenv": "7.4.*",
+        "symfony/event-dispatcher": "7.4.*",
+        "symfony/filesystem": "7.4.*",
+        "symfony/framework-bundle": "7.4.*",
+        "symfony/http-client": "7.4.*",
         "symfony/http-client-contracts": "^3.6",
-        "symfony/http-foundation": "6.4.*",
-        "symfony/http-kernel": "6.4.*",
-        "symfony/process": "6.4.*",
-        "symfony/translation": "6.4.*",
-        "symfony/twig-bundle": "6.4.*",
-        "symfony/yaml": "6.4.*",
+        "symfony/http-foundation": "7.4.*",
+        "symfony/http-kernel": "7.4.*",
+        "symfony/process": "7.4.*",
+        "symfony/translation": "7.4.*",
+        "symfony/twig-bundle": "7.4.*",
+        "symfony/yaml": "7.4.*",
         "twig/twig": "^3.4"
     },
     "replace": {
@@ -58,7 +58,7 @@
         },
         "sort-packages": true,
         "platform": {
-            "php": "8.1.0"
+            "php": "8.2.0"
         }
     },
     "scripts": {
@@ -96,7 +96,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.2.*"
+            "require": "7.4.*"
         },
         "bamarni-bin": {
             "bin-links": true,

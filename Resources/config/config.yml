@@ -2,7 +2,8 @@ imports:
   - { resource: services.yml }
 
 framework:
-  secret: ''
+  # nothing is signed in the installer, but Symfony requires a non-empty secret to build the container
+  secret: 'shopware-web-installer'
   default_locale: us
   http_method_override: false
   handle_all_throwables: false
