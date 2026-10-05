@@ -16,6 +16,7 @@ use Shopware\WebInstaller\Services\StreamedCommandResponseGenerator;
 use Shopware\WebInstaller\Services\TrackingService;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -49,7 +50,7 @@ class InstallControllerTest extends TestCase
         static::assertSame('install.html.twig', $response->getContent());
     }
 
-    public function testInstall(): void
+    public function testInstallWithReadOnlyComposerTemplate(): void
     {
         $tmpDir = sys_get_temp_dir() . '/' . uniqid('test', true);
 
@@ -77,16 +78,37 @@ class InstallControllerTest extends TestCase
             ])
             ->willReturn(new StreamedResponse());
 
-        $controller = new InstallController($recovery, $responseGenerator, $this->createMock(ReleaseInfoProvider::class), $this->createMock(ProjectComposerJsonUpdater::class), $this->createMock(LanguageProvider::class), $this->createMock(TrackingService::class));
+        $controller = new InstallController($recovery, $responseGenerator, $this->createMock(ReleaseInfoProvider::class), new ProjectComposerJsonUpdater(new MockHttpClient()), $this->createMock(LanguageProvider::class), $this->createMock(TrackingService::class));
         $controller->setContainer($this->buildContainer());
 
         $request = new Request();
         $request->setSession(new Session(new MockArraySessionStorage()));
-        $request->query->set('shopwareVersion', '6.4.10.0');
+        $request->query->set('shopwareVersion', '6.7.3.0');
 
-        $controller->run($request);
+        $template = \dirname(__DIR__, 2) . '/Resources/install-template/composer.json';
+        $permissions = fileperms($template);
+        static::assertIsInt($permissions);
 
-        (new Filesystem())->remove($tmpDir);
+        try {
+            // Files inside the installer PHAR are read-only.
+            chmod($template, 0444);
+            clearstatcache(true, $template);
+
+            $controller->run($request);
+
+            $composerFile = $tmpDir . '/composer.json';
+            static::assertSame(0666 & ~umask(), fileperms($composerFile) & 0777);
+            static::assertIsWritable($composerFile);
+
+            $contents = file_get_contents($composerFile);
+            static::assertIsString($contents);
+            $composerJson = json_decode($contents, true, flags: JSON_THROW_ON_ERROR);
+            static::assertSame('6.7.3.0', $composerJson['require']['shopware/core']);
+        } finally {
+            chmod($template, $permissions & 0777);
+            clearstatcache(true, $template);
+            (new Filesystem())->remove($tmpDir);
+        }
     }
 
     public function testRunFinishCallableOnSuccess(): void

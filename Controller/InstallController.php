@@ -57,7 +57,8 @@ class InstallController extends AbstractController
         $folder = $this->recoveryManager->getInstallTargetDir();
 
         $fs = new Filesystem();
-        $fs->copy(\dirname(__DIR__) . '/Resources/install-template/composer.json', $folder . '/composer.json');
+        // Create a writable file instead of preserving the read-only PHAR permissions.
+        $fs->dumpFile($folder . '/composer.json', $fs->readFile(\dirname(__DIR__) . '/Resources/install-template/composer.json'));
         $fs->dumpFile($folder . '/.env', \PHP_EOL);
         $fs->dumpFile($folder . '/.gitignore', '/.idea
 /vendor/
@@ -130,7 +131,7 @@ class InstallController extends AbstractController
 
         // Shopware 6.4 does not contain a htaccess by default
         if (!$fs->exists($htaccessFile)) {
-            $fs->copy(\dirname(__DIR__) . '/Resources/install-template/htaccess', $htaccessFile);
+            $fs->dumpFile($htaccessFile, $fs->readFile(\dirname(__DIR__) . '/Resources/install-template/htaccess'));
         }
 
         $self = $_SERVER['SCRIPT_FILENAME'];
